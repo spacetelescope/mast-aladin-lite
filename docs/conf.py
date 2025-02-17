@@ -30,15 +30,9 @@ except ImportError:
 # Configuration for intersphinx
 intersphinx_mapping = {
     'jdaviz': ('https://jdaviz.readthedocs.io/en/latest/', None),
-#     'python': ('https://docs.python.org/3/',
-#                (None, 'http://data.astropy.org/intersphinx/python3.inv')),
-#     'numpy': ('https://numpy.org/doc/stable/',
-#               (None, 'http://data.astropy.org/intersphinx/numpy.inv')),
-#     'scipy': ('https://docs.scipy.org/doc/scipy/reference/',
-#               (None, 'http://data.astropy.org/intersphinx/scipy.inv')),
-#     'matplotlib': ('https://matplotlib.org/',
-#                    (None, 'http://data.astropy.org/intersphinx/matplotlib.inv')),  # noqa
-#     'astropy': ('https://docs.astropy.org/en/stable/', None)
+     'python': ('https://docs.python.org/3/',
+                (None, 'http://data.astropy.org/intersphinx/python3.inv')),
+     'astropy': ('https://docs.astropy.org/en/stable/', None)
     }
 
 # Add any Sphinx extension module names here, as strings. They can be
