@@ -15,8 +15,8 @@
 import datetime
 import sys
 # Update later when package implemented
-version = "0.1.0"
-release = "0.1.0"
+version = "0.0.1"
+release = "0.0.1"
 
 try:
     from sphinx_astropy.conf.v1 import *  # noqa
@@ -30,10 +30,10 @@ except ImportError:
 # Configuration for intersphinx
 intersphinx_mapping = {
     'jdaviz': ('https://jdaviz.readthedocs.io/en/latest/', None),
-     'python': ('https://docs.python.org/3/',
-                (None, 'http://data.astropy.org/intersphinx/python3.inv')),
-     'astropy': ('https://docs.astropy.org/en/stable/', None)
-    }
+    'python': ('https://docs.python.org/3/',
+               (None, 'http://data.astropy.org/intersphinx/python3.inv')),
+    'astropy': ('https://docs.astropy.org/en/stable/', None)
+}
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
