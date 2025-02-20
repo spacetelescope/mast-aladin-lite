@@ -10,9 +10,14 @@ dependencies = [
     "astroquery",
     "sidecar",
 ]
-
 dynamic = [
     "version",
+]
+
+[project.optional-dependencies]
+docs = [
+    "sphinx-astropy[confv2]>=1.9.1",
+    "sphinx_design"
 ]
 
 [project.urls]
