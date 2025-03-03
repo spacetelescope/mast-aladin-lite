@@ -1,5 +1,5 @@
 import pytest
-from mast_aladin_lite.app import MastAladin
+from mast_aladin_lite import MastAladin
 
 
 @pytest.fixture
