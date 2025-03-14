@@ -44,8 +44,8 @@ jobs:
             toxenv: securityaudit
             allow_failure: false
 
-          - name: macOS - Python 3.11 with coverage checking and all deps
-            os: mac-latest
+          - name: macOS - Python 3.11 with coverage checking and devdeps
+            os: macos-latest
             python: '3.11'
             toxenv: py311-test-devdeps-cov
             allow_failure: false
