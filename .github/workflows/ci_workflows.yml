@@ -44,6 +44,12 @@ jobs:
             toxenv: securityaudit
             allow_failure: false
 
+          - name: Python 3.11 with coverage checking
+            os: windows-latest
+            python: '3.11'
+            toxenv: py311-test-cov
+            allow_failure: false
+
           - name: macOS - Python 3.10
             os: macos-latest
             python: '3.10'
@@ -52,7 +58,7 @@ jobs:
 
           - name: Windows - Python 3.11
             os: windows-latest
-            python: 3.11
+            python: '3.11'
             toxenv: py311-test
             allow_failure: false
 
