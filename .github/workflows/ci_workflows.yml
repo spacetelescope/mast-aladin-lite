@@ -77,24 +77,24 @@ jobs:
         path: coverage.xml
         if-no-files-found: error
 
-upload-codecov:
-  needs: [ ci_tests ]
-  permissions:
-    contents: none
-  runs-on: ubuntu-latest
-  name: Upload Coverage
-  steps:
-  - name: Download coverage artifacts
-    uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16  # v4.1.8
-    with:
-      path: coverage
-      pattern: coverage_*
-      merge-multiple: true
-  - name: Upload report to Codecov
-    if: ${{ hashFiles('coverage/') != '' }}
-    uses: codecov/codecov-action@13ce06bfc6bbe3ecf90edbbf1bc32fe5978ca1d3  # v5.3.1
-    with:
-      token: ${{ secrets.CODECOV_TOKEN }}
-      directory: coverage
-      fail_ci_if_error: true
-      verbose: true
+  upload-codecov:
+    needs: [ ci_tests ]
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    name: Upload Coverage
+    steps:
+    - name: Download coverage artifacts
+      uses: actions/download-artifact@v5
+      with:
+        path: coverage
+        pattern: coverage_*
+        merge-multiple: true
+    - name: Upload report to Codecov
+      if: ${{ hashFiles('coverage/') != '' }}
+      uses: codecov/codecov-action@13ce06bfc6bbe3ecf90edbbf1bc32fe5978ca1d3  # v5.3.1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        directory: coverage
+        fail_ci_if_error: true
+        verbose: true
