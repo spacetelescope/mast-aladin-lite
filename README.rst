@@ -12,15 +12,14 @@
 mast-aladin-lite
 ========
 
-Introduction
-----------
-
 While we experiment with Aladin Lite integration in MAST platforms, this repository can be used to contain:
+
 - documentation
 - support code for wrapping and integrating Aladin Lite
 - demonstration notebooks
 
 Once design plans become more concrete, we can decide whether to keep using this repository.
+
 
 Installing
 ----------
@@ -47,3 +46,18 @@ Or, you can install the latest development version of ``mast-aladin-lite`` using
 
 For details on installing and using Jdaviz, see the
 `mast-aladin-lite Installation <https://mast-aladin-lite.readthedocs.io/en/latest/installation.html>`_.
+
+
+Help
+----------
+
+If you encounter any unreported bugs or issues, please `open a GitHub issue <https://github.com/spacetelescope/mast-aladin-lite/issues/new/choose>`_
+
+
+License & Attribution
+----------
+
+This project is Copyright (c) Space Telescope Science Institute and licensed under
+the terms of the BSD 3-Clause license. See the
+`licenses <https://github.com/spacetelescope/mast-aladin-lite/tree/main/licenses>`_
+folder for more information on works the mast-aladin-list package is derived from or distributes.
