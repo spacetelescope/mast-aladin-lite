@@ -10,7 +10,7 @@
     :alt: Documentation Status
 
 mast-aladin-lite
-========
+================
 
 While we experiment with Aladin Lite integration in MAST platforms, this repository can be used to contain:
 
@@ -55,7 +55,7 @@ If you encounter any unreported bugs or issues, please `open a GitHub issue <htt
 
 
 License & Attribution
-----------
+---------------------
 
 This project is Copyright (c) Space Telescope Science Institute and licensed under
 the terms of the BSD 3-Clause license. See the
