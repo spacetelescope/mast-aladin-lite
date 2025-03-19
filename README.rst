@@ -12,6 +12,11 @@
 mast-aladin-lite
 ================
 
+.. warning::
+
+    mast-aladin-lite is currently in heavy development and breaking changes may occur without warning.
+
+
 While we experiment with Aladin Lite integration in MAST platforms, this repository can be used to contain:
 
 - documentation
