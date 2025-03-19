@@ -20,7 +20,6 @@ While we experiment with Aladin Lite integration in MAST platforms, this reposit
 
 Once design plans become more concrete, we can decide whether to keep using this repository.
 
-
 Installing
 ----------
 
@@ -47,12 +46,10 @@ Or, you can install the latest development version of ``mast-aladin-lite`` using
 For details on installing and using Jdaviz, see the
 `mast-aladin-lite Installation <https://mast-aladin-lite.readthedocs.io/en/latest/installation.html>`_.
 
-
 Help
 ----------
 
 If you encounter any unreported bugs or issues, please `open a GitHub issue <https://github.com/spacetelescope/mast-aladin-lite/issues/new/choose>`_
-
 
 License & Attribution
 ---------------------
