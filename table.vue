@@ -1,0 +1,99 @@
+<template>
+  <div class="table-component" v-if="show_if_empty || items.length">
+    <v-row style="margin: 0px 0px -8px 0px !important">
+      <div class="row-select">
+        <v-select
+          class="no-hint"
+          v-model="headers_visible"
+          :items="headers_avail"
+          @change="$emit('update:headers_visible', $event)"
+          label="Columns"
+          multiple
+          dense
+        >
+        <template v-slot:selection="{ item, index }">
+          <span
+            v-if="index === 0"
+            class="grey--text text-caption"
+          >
+            ({{ headers_visible.length}} selected)
+          </span>
+        </template>
+        <template v-slot:prepend-item>
+          <v-list-item
+            ripple
+            @mousedown.prevent
+            @click="() => {if (headers_visible.length < headers_avail.length) { headers_visible = headers_avail} else {headers_visible = []}}"
+          >            >
+            <v-list-item-action>
+              <v-icon>
+                {{ headers_visible.length == headers_avail.length ? 'mdi-close-box' : headers_visible.length ? 'mdi-minus-box' : 'mdi-checkbox-blank-outline' }}
+              </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ headers_visible.length < headers_avail.length ? "Select All" : "Clear All" }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider class="mt-2"></v-divider>
+        </template>
+        </v-select>
+      </div>
+    </v-row>
+
+    <v-row style="margin: 0px 0px 8px 0px !important">
+      <v-data-table
+        dense
+        :headers="headers_visible_sorted.map(item => {return {'text': item, 'value': item}})"
+        :items="items"
+        :item-key="item_key"
+        :show-select="show_rowselect"
+        :single-select="!multiselect"
+        :items-per-page="items_per_page"
+        v-model="selected_rows"
+        class="elevation-1 width-100"
+        dense
+      ></v-data-table>
+    </v-row>
+  </div>
+</template>
+
+<script>
+module.exports = {
+  computed: {
+    headers_visible_sorted() {
+      return this.headers_avail.filter(item => this.headers_visible.indexOf(item) !== -1);
+    },
+  }
+};
+</script>
+
+
+<style scoped>
+  .v-data-table {
+    width: 100% !important
+  }
+
+  .only-show-in-tray {
+    display: none;
+  }
+  .tray-plugin .only-show-in-tray {
+    display: inline-block;
+  }
+
+  .row-select {
+    width: 100%;
+  }
+  .tray-plugin .row-select {
+    width: calc(100% - 40px)
+  }
+
+  .plugin-table-component {
+    margin: 12px;
+  }
+  .tray-plugin .plugin-table-component {
+    margin: 0px -12px 0px -12px;
+  }
+
+</style>
