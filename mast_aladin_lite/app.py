@@ -22,14 +22,18 @@ class MastAladin(Aladin):
     @observe('clicked_object')
     def _on_object_clicked(self, data):
         self.info.value = f"<h3>Info</h3><p>{data}</p>"
+        clicked_coord = [data['new']['ra'], data['new']['dec']]
 
         # if this is a catalog object selection:
         if 'ra' in data['new']:
-            ra = self.selected_table.table['ra']
-            dec = self.selected_table.table['dec']
-            dist = np.hypot(ra - data['new']['ra'], dec - data['new']['dec'])
-            closest_idx = np.argmin(dist)
-            self.selected_table.selected_rows = [self.selected_table.items[closest_idx]]
+            for item in self.selected_table.items:
+                row_coord = [item['ra'], item['dec']]
+
+                # only select row for exact RA+Dec matches:
+                if all(np.isclose(row_coord, clicked_coord)):
+                    self.selected_table.selected_rows = [item]
+                    break
+
         else:
             # if the new selection isn't an object in the last-loaded catalog,
             # deselect the selected rows:
