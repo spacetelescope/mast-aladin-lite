@@ -61,7 +61,8 @@ class Table(VuetifyTemplate):
         default_keys = [
             'fileSetName', # data products from Missions Mast
             'source_id', # Gaia
-            'MatchID'  # Hubble Source Catalog
+            'MatchID',  # Hubble Source Catalog
+            'objID',  # PanSTARRS
         ]
         for default_key in default_keys:
             if default_key in columns:

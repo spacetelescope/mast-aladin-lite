@@ -19,13 +19,13 @@ class MastAladin(Aladin):
         table_widget = Table(table)
         self.tables[name] = self.selected_table = table_widget
 
-    @observe('clicked_object')
+    @observe('clicked_object', 'clicked_footprint')
     def _on_object_clicked(self, data):
         self.info.value = f"<h3>Info</h3><p>{data}</p>"
-        clicked_coord = [data['new']['ra'], data['new']['dec']]
 
         # if this is a catalog object selection:
         if 'ra' in data['new']:
+            clicked_coord = [data['new']['ra'], data['new']['dec']]
             for item in self.selected_table.items:
                 row_coord = [item['ra'], item['dec']]
 
