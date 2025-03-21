@@ -1,13 +1,15 @@
 <template>
+
   <div class="table-component" v-if="show_if_empty || items.length">
-    <v-row style="margin: 0px 0px -8px 0px !important">
-      <div class="row-select">
+    <v-row>
+      <v-col>
+      <div class="row-select" style="margin-bottom: -20px;">
         <v-select
           class="no-hint"
           v-model="headers_visible"
           :items="headers_avail"
           @change="$emit('update:headers_visible', $event)"
-          label="Columns"
+          label="Display columns"
           multiple
           dense
         >
@@ -24,7 +26,7 @@
             ripple
             @mousedown.prevent
             @click="() => {if (headers_visible.length < headers_avail.length) { headers_visible = headers_avail} else {headers_visible = []}}"
-          >            >
+          >
             <v-list-item-action>
               <v-icon>
                 {{ headers_visible.length == headers_avail.length ? 'mdi-close-box' : headers_visible.length ? 'mdi-minus-box' : 'mdi-checkbox-blank-outline' }}
@@ -40,9 +42,14 @@
         </template>
         </v-select>
       </div>
+      </v-col>
+      <v-col>
+          <v-row>
+              <jupyter-widget :widget="popout_button"></jupyter-widget>
+          </v-row>
+      </v-col>
     </v-row>
-
-    <v-row style="margin: 0px 0px 8px 0px !important">
+    <v-row style="margin: 5px;">
       <v-data-table
         dense
         :headers="headers_visible_sorted.map(item => {return {'text': item, 'value': item}})"
@@ -52,8 +59,7 @@
         :single-select="!multiselect"
         :items-per-page="items_per_page"
         v-model="selected_rows"
-        class="elevation-1 width-100"
-        dense
+        class="elevation-2"
       ></v-data-table>
     </v-row>
   </div>
@@ -61,6 +67,7 @@
 
 <script>
 module.exports = {
+  props: ['popout_button'],
   computed: {
     headers_visible_sorted() {
       return this.headers_avail.filter(item => this.headers_visible.indexOf(item) !== -1);
@@ -71,29 +78,13 @@ module.exports = {
 
 
 <style scoped>
-  .v-data-table {
-    width: 100% !important
+  thead {
+      background-color: rgb(0, 97, 126); /* MAST button background lighter-blue color */
+    }
+  .v-data-table-header span {
+    color: white  !important;
   }
-
-  .only-show-in-tray {
-    display: none;
+  tr:hover {
+    background-color: #a75000; /* MAST accent color */
   }
-  .tray-plugin .only-show-in-tray {
-    display: inline-block;
-  }
-
-  .row-select {
-    width: 100%;
-  }
-  .tray-plugin .row-select {
-    width: calc(100% - 40px)
-  }
-
-  .plugin-table-component {
-    margin: 12px;
-  }
-  .tray-plugin .plugin-table-component {
-    margin: 0px -12px 0px -12px;
-  }
-
 </style>
