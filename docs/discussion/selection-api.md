@@ -1,29 +1,17 @@
 # Selection API Discussion
 
-- [1. Overview](#id-SelectionAPIDiscussion-Overview)
-
-  - [1.1. Design Principles](#id-SelectionAPIDiscussion-DesignPr)
-
-  - [1.2. Feature
-    Requirements](#id-SelectionAPIDiscussion-FeatureR)
-
-  - [1.3. Example Use Cases](#id-SelectionAPIDiscussion-ExampleU)
-
-- [2. ipyaladin interfaces](#id-SelectionAPIDiscussion-ipyaladi)
-
-  - [2.1. GET](#id-SelectionAPIDiscussion-GET)
-
-  - [2.2. SELECT](#id-SelectionAPIDiscussion-SELECT)
-
-- [3. aladin-lite interfaces](#id-SelectionAPIDiscussion-aladin-l)
-
-  - [3.1. Listeners](#id-SelectionAPIDiscussion-Listener)
-
-  - [3.2. GET](#id-SelectionAPIDiscussion-GET.1)
-
-  - [3.3. SELECT](#id-SelectionAPIDiscussion-SELECT.1)
-
-  - [3.4. Misc](#id-SelectionAPIDiscussion-Misc)
+- [1. Overview](#1-Overview)
+  - [1.1. Design Principles](#11-design-principles)
+  - [1.2. Feature Requirements](#12-feature-requirements)
+  - [1.3. Example Use Cases](#13-example-use-cases)
+- [2. ipyaladin interfaces](#2-ipyaladin-interfaces)
+  - [2.1. GET](#21-get)
+  - [2.2. SELECT](#22-select)
+- [3. aladin-lite interfaces](#3-aladin-lite-interfaces)
+  - [3.1. Listeners](#31-Listeners)
+  - [3.2. GET](#32-get)
+  - [3.3. SELECT](#33-select)
+  - [3.4. Misc](#34-misc)
 
 # 1. Overview
 
