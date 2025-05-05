@@ -15,16 +15,11 @@
 
 # 1. Overview
 
-We are building tools for the Roman Research Nexus platform to enable
-scientists to analyze data from the Nancy Grace Roman Space Telescope.
-As part of this effort, we are developing a suite of interoperable tools
-within a JupyterLab environment, including integration with Aladin Lite.
+To enable analysis of data from the Roman telescope, we are building out tools for the cloud-based Roman Research Nexus platform. We are developing a suite of interoperable tools within a JupyterLab environment, and are integrating Aladin Lite into this toolset.
 
-To support scientific workflows, we aim to expose Aladin Lite\'s
-features programmatically. Our initial focus is on selection
-functionality, which is foundational for many analysis use cases.
+To support user workflows, we need to expose Aladin Lite's features programmatically. Our initial focus is on selection functionality, which is foundational for many use cases.
 
-We evaluated the current selection features available in ipyaladin, and
+We examined the current selection features available in ipyaladin, and
 prototyped programmatic extensions to support:
 
 - selecting a list of sources
@@ -33,25 +28,23 @@ prototyped programmatic extensions to support:
 - selecting sources within a region
   [[PR](https://github.com/pcuste1/ipyaladin/pull/1)].
 
-These proofs-of-concept worked by reaching into internal components of
-Aladin Lite. However, a more robust and maintainable solution requires
-official API support.
+These proofs-of-concept work by accessing internal components of Aladin Lite. We also examined footprint selection, which will require further discussion to determine the best path forward. This work makes it clear that official API support will allow for a more robust, maintainable solution.
 
 This document outlines:
 
-- our design principles
+- Design principles
 
-- feature requirements
+- Feature requirements
 
 - API specifications for both Aladin Lite and ipyaladin
 
-- several motivating use cases.
+- Use cases.
 
 ## 1.1. Design Principles
 
 #### Standard Interface Pattern
 
-For each feature exposed by **aladin-lite** that we intend to support,
+For each feature exposed by **aladin-lite** and **ipyaladin** that we intend to support,
 the interface should consistently offer the following APIs:
 
 - **Listener**: Allows developers to attach callbacks to respond to
@@ -68,16 +61,9 @@ supported functionality.
 
 #### Separation of Concerns
 
-It is essential to clearly distinguish between the roles of the
-ipyaladin and aladin-lite APIs. While many capabilities in ipyaladin
-serve as direct proxies for aladin-lite features, this is not always the
-case. ipyaladin is a higher-level interface that may combine
-multiple aladin-lite operations to deliver more integrated or complex
-functionality.
+It is essential to clearly distinguish between the roles of the ipyaladin and aladin-lite APIs. While many capabilities in ipyaladin serve as direct proxies for aladin-lite features, this is not always the case. ipyaladin is a higher-level interface that may combine multiple aladin-lite operations to deliver more integrated or complex functionality. Furthermore, the timing of releases, versioning, and updates can lead to separation of functionality and efforts. 
 
-For example, although aladin-lite may expose individual APIs for
-selecting catalog objects and footprints, ipyaladin might provide a
-unified API that coordinates both actions under a single interface call.
+For example, although aladin-lite may expose individual APIs for selecting catalog objects and footprints, ipyaladin might provide a unified API that coordinates both actions under a single interface call.
 
 #### Consistent Data Formats
 
@@ -102,42 +88,42 @@ and consistency for programmatic workflows.
 
 As a notebook user/scientist I want to\...
 
-- slect a source within a catalog using a programmatic API
+- select a source within a catalog using a programmatic API
 
 - select a list of sources within all loaded catalogs using a
   programmatic API
 
 - select all sources within a defined region using a programmatic API
 
-- select a footprint using a programmatic API 
+- select a footprint(s) using a programmatic API 
 
 #### Data Retrieval Requirements 
 
 As a notebook user/scientist I want to\...
 
-- access the list of currently selected sources using a programmatic
+- access the currently selected source(s) using a programmatic
   API 
 
 - access the region of currently selected sources, if one was used to
   select the sources, using a programmatic API 
 
-- access the footprint currently selected using a programmatic API 
+- access the footprint(s) currently selected using a programmatic API 
 
 #### Listener Requirements 
 
 As a developer, I want to\...
 
-- listen for changes to the selected sources 
+- listen for changes to the selected source(s) 
 
 - listen for changes to the selection region
 
-- listen for changes to the selected footprint
+- listen for changes to the selected footprint(s)
 
 #### Misc. Requirements
 
 As a notebook user/scientist I want to\...
 
-- be able to remove the current selection using a programmatic API
+- be able to remove the current selection(s) using a programmatic API
 
 ## 1.3. Example Use Cases
 
@@ -148,58 +134,58 @@ following
 aladin.selectSources(match_func: lambda source: source.rshift > 1 and
 source.rshift < 2)
 ```
-**Use case 2:** A scientist is interested in a subset of the sources in
+**Use case 2:** A scientist is interested in a subset of sources in
 a catalog. Since they loaded the catalog themselves, they know that
 there is an objId  field that uniquely identifies the source. The query
 might look like the following 
 ```
 aladin.selectSources(sources=catalog_subset, match_key="objId")
 ```
-maybe they instead want to use RA and DEC to identify the source instead
+If they instead want to use RA and DEC to identify the source instead
 ```
 aladin.selectSources(sources=catalog_subset, match_keys=["ra",
 "dec"])
 ```
 **Use case 3:** A software engineer wants to create an interoperable
-layer between an aladin-lite widget and another visualization tool, such
+layer between **ipyaladin** and another visualization tool, such
 as [jdaviz](https://jdaviz.readthedocs.io/en/stable/). They would then
 need to use a combination of the APIs listed in this doc to ensure that
-selection in aladin-lite are reflected in jdaviz and vice versa. 
+selections in **ipyaladin** are reflected in jdaviz and vice versa. 
 
 # 2. ipyaladin interfaces
 
 ## 2.1. GET
 
-#### GetSelection
+#### get_selection
 ```
-def GetSelection() -> Table
+def get_selection() -> Table
 ```
 Returns an Astropy table containing the currently selected catalog
 sources
 
-#### GetRegion
+#### get_region
 ```
-def GetRegion() -> Region
+def get_region() -> Region
 ```
 Returns an Astropy Region with the currently selected region (if
 applicable)
 
-#### GetFootprint 
+#### get_footprint
 ```
-def GetFootprint() -> Footprint
+def get_footprints() -> Footprint
 ```
-This method returns the currently selected footprint
+Returns the currently selected footprint(s)
 
 ## 2.2. SELECT
 
-#### SelectSources
+#### select_sources
 
-A few alternatives are provided for the selection functionality. Each
+A few alternatives are provided for the selection functionality, and each
 has potential use cases and should be considered. 
 
 ##### Option 1:
 ```
-def SelectSources(selection: Table, match_keys: List[Str]) -> None
+def select_sources(selection: Table, match_keys: List[Str]) -> None
 ```
 Send a request to aladin-lite to select a list of catalog sources
 defined in an astropy table with a list of keys to match on
@@ -212,7 +198,7 @@ defined in an astropy table with a list of keys to match on
 
 ##### Option 2:
 ```
-def SelectSources(selection: Table, match_key: Str) -> None
+def select_sources(selection: Table, match_key: Str) -> None
 ```
 Send a request to aladin-lite to select a list of catalog sources
 defined in an astropy table with a single key to match on
@@ -226,19 +212,19 @@ defined in an astropy table with a single key to match on
 
 ##### Option 3:
 ```
-def SelectSources(match_func: Callable) -> None
+def select_sources(match_func: Callable) -> None
 ```
 Sends a request to aladin-lite to select all catalog sources that match
 the provided function 
 
   **Parameter**   |**Type**   |**Description**
   --------------- |---------- |-----------------------------------------------------
-  match_func      |lambda     |Lambda expression that defines that matching criteria for sources
+  match_func      |lambda     |Lambda expression that defines matching criteria for sources
   --------------------------------------------------------------------------------
 
-#### SelectRegion
+#### select_region
 ```
-def SelectRegion(region: Region) -> None
+def select_region(region: Region) -> None
 ```
 This method triggers a selection by region event based on the coordinates 
 
@@ -247,9 +233,9 @@ This method triggers a selection by region event based on the coordinates 
   region          |[Region](https://astropy-regions.readthedocs.io/en/stable/api/regions.Region.html#regions.Region)   |The region corresponding to the sky coordinates that the user would like to select sources within
   ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#### SelectFootprint
+#### select_footprint
 ```
-def SelectFootprint(footprint: Footprint) -> None
+def select_footprint(footprint: Footprint) -> None
 ```
 This method triggers a selection event on a user provided footprint
 
@@ -269,9 +255,9 @@ events that occur within aladin-lite.
   **Event Name**     |**Description**              |**Data**            |**Supported**
   ------------------ |---------------------------- |------------------- |---------------
   objectsSelected    |Fired when objects are selected by region, represents the individual objects selected |List of sources     |Existing
-  regionsSelected    |Fired when objects are selected by region, represents the region used to select the objects    |Shape of the region selected|New
-  objectClicked      |Fires when an object is clicked | Catalog object and xy coordinates of the click event | Existing
-  footprintClicked   |Fires when a footprint is clicked | Footprint object xy coordinates of the click event | Existing
+  regionsSelected    |Fired when objects are selected by region, represents the region used to select the objects    |Shape of the region selected|Proposed
+  objectClicked      |Fires when an object is clicked | Catalog object(s) and xy coordinates of the click event | Existing
+  footprintClicked   |Fires when a footprint is clicked | Footprint object(s) xy coordinates of the click event | Existing
   -----------------------------------------------------------------------------------
 
 ## 3.2. GET
@@ -373,6 +359,6 @@ Triggers a footprint selection within aladin-lite widget
 
 #### RemoveSelection
 ```
-function RemoveSelection(()
+function RemoveSelection()
 ```
 Removes the current selection from aladin-lite widget.
