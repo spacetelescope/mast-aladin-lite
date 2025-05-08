@@ -102,7 +102,7 @@ def get_region() -> Region
 ```
 
 Returns an **Astropy** `Region` with the currently selected region (if applicable)
-#### get_footprint
+#### get_footprints
 
 ```
 def get_footprints() -> List[Footprint]
