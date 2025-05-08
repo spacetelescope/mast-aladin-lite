@@ -317,6 +317,9 @@ Looking ahead, we anticipate further significant updates to the API. To enable a
 - What next steps do you see moving forward with this suggestion?
 - What collaboration tools do you prefer?
 ## 4.3 Footprint Selection
+**Footprints as catalog elelments:**  
+Currently when a "catalog" is loaded and it has an `s_region` column, the footprints defined by that column are rendered in Aladin Lite.  Does this hint at possible additional unification of how footprints and catalog sources are handling (i.e., using the same events and methods to select them, and optionally displaying the other columns somewhere on selection)?  Some unification seems intuitive and could help with identifying which footprints have been selected without needing additional baggage on the graphics objects themselves.
+
 **Region-Based Footprint Selection:**  
 When performing a region selection, are footprints considered selected only if they are entirely contained within the region, or are footprints that overlap with the region also included? Clarifying this behavior will be important for us moving forward as we implement consistent selection logic across multiple tools.
 
