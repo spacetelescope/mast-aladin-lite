@@ -31,7 +31,7 @@ For each feature exposed by **aladin-lite** and **ipyaladin** that we intend to 
 - **Listener**: Allows developers to attach callbacks to respond to relevant events.
 - **Get**: Retrieves the current state or value of the feature.
 - **Set (Select)**: Updates the feature\'s state programmatically. 
-- **Misc:** Features that support the other 3,
+- **Misc:** Features that support the other 3.
 
 This pattern ensures clarity, predictability, and ease of use across all supported functionality.
 #### Separation of Concerns
