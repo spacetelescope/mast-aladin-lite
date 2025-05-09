@@ -309,6 +309,7 @@ Our demo implementation addresses one of these discrepancies by treating rectang
 - Are there recommended approaches for reconciling celestial sphere regions with 2D image plane representations in **Astropy**?
 - Beyond **Astropy** regions, are there other libraries or data structures that can better handle the translation between celestial and image coordinates?
 - Should we implement a warning system to inform users when regions exceed a specified angular resolution, indicating potential inaccuracies?
+- Would there be any benefit to storing the regions as MOCs?
 ## 4.2 Path Forward
 If the approach outlined above is accepted, we are ready to submit draft pull requests for review. These drafts will implement the APIs discussed in this document, and we are prepared to make any necessary revisions based on the feedback we receive from CDS.
 
@@ -317,18 +318,20 @@ Looking ahead, we anticipate further significant updates to the API. To enable a
 - What next steps do you see moving forward with this suggestion?
 - What collaboration tools do you prefer?
 ## 4.3 Footprint Selection
-**Footprints as catalog elelments:**  
-Currently when a "catalog" is loaded and it has an `s_region` column, the footprints defined by that column are rendered in Aladin Lite.  Seeing this in action led to the questions:
+**Identifying Footprints**:
+Are there any best practices for uniquely identifying a footprint for selection? This may argue for the potential catalog storage of footprints with columns and key pairs that uniquely identify them. 
 
+**Footprints as catalog elements:**
+Currently when a "catalog" is loaded and it has an `s_region` column, the footprints defined by that column are rendered in Aladin Lite. Seeing this in action led to the questions:
 - Should handling of footprints and catalog sources could be more unified?
 - Is any unification like that already planned?
 
-For example, footprint selection could fire the same event(s) as object selection, and could result in displaying the metadata in a a table or popup as with catalog object selection.  The catalog columns could also help in differentiating footprints when needed.
+For example, footprint selection could fire the same event(s) as object selection, and could result in displaying the metadata in a table or popup as with catalog object selection. The catalog columns could also help in differentiating footprints when needed.
 
-**Region-Based Footprint Selection:**  
+**Region-Based Footprint Selection:**
 When performing a region selection, are footprints considered selected only if they are entirely contained within the region, or are footprints that overlap with the region also included? Clarifying this behavior will be important for us moving forward as we implement consistent selection logic across multiple tools.
 
-**Skewer Selection:**  
+**Skewer Selection:**
 We are also exploring the feasibility of a skewer selection feature. This functionality would allow users to select all footprints that intersect with a given point. Is this type of selection currently supported, or would it require new API functionality?
 ## 4.4 Future Items
-In the future, we may want to consider implementing a version of the UI that operates on individual catalogs. We may also want to implement a UI method for toggling the visibility of a catalog. 
+In the future, we may want to consider implementing a version of the UI that operates on individual catalogs. We may also want to implement a UI method for toggling the visibility of a catalog.
