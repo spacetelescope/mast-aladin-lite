@@ -5,29 +5,38 @@ class AID:
     """
     Provides API for mast-aladin-lite to allow for parity with
     jdaviz. This is to be used as a mixin within exisiting classes.
-    This is based on the Astro Image Display API (AIDA).
+    This is based on the Astro Image Display API (AIDA)[1]_.
+
+    References
+    ----------
+    .. [1] https://github.com/astropy/astro-image-display-api/
 
     """
 
     def __init__(self, mast_aladin):
         self.app = mast_aladin
 
-    def center_on(self, point):
+    def set_viewport(self, center):
         """
-        Centers the viewer on a particular point given as SkyCoords.
+        Sets the viewport based on provided parameters.
+        Presently, centers the viewer on a particular point, `center`,
+        given as `~astropy.coordinates.SkyCoord` objects.
 
         Parameters
         ----------
-        point : `~astropy.coordinates.SkyCoord`
+        center : `~astropy.coordinates.SkyCoord`
+            Center the viewer on this coordinate.
 
         Raises
         ------
-        NotImplementedError
+        TypeError
             Given coordinates are not provided as SkyCoord.
 
         """
 
-        if not isinstance(point, SkyCoord):
-            raise NotImplementedError
+        if not isinstance(center, SkyCoord):
+            raise TypeError(
+                "Invalid value for center. Center must be a SkyCoord or tuple of (X, Y)."
+            )
 
-        self.app.target = point
+        self.app.target = center
