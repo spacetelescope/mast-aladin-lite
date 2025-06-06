@@ -15,9 +15,9 @@ class AladinSyncAdapter(ViewerSyncAdapter):
 
     def get_limits(self, wcs):
         """
-        Aladin Lite defines its center as the screen's center in WCS. In contrast, 
-        Imviz uses the center pixel to infer the corners. This function calculates 
-        the sky coordinates of the four corners of the Aladin view using spherical 
+        Aladin Lite defines its center as the screen's center in WCS. In contrast,
+        Imviz uses the center pixel to infer the corners. This function calculates
+        the sky coordinates of the four corners of the Aladin view using spherical
         offsets, then converts them to pixel coordinates using the Imviz WCS.
 
         Returns:
@@ -33,7 +33,7 @@ class AladinSyncAdapter(ViewerSyncAdapter):
         half_fov_y = self.viewer._fov_xy["y"] * u.deg / 2
 
         offsets = [
-            (half_fov_x,  half_fov_y),
+            (half_fov_x, half_fov_y),
             (-half_fov_x, half_fov_y),
             (half_fov_x, -half_fov_y),
             (-half_fov_x, -half_fov_y),
@@ -49,8 +49,8 @@ class AladinSyncAdapter(ViewerSyncAdapter):
 
     def get_fov(self):
         return {
-            "x":  self.viewer._fov_xy["x"] * u.deg,
-            "y":  self.viewer._fov_xy["y"] * u.deg
+            "x": self.viewer._fov_xy["x"] * u.deg,
+            "y": self.viewer._fov_xy["y"] * u.deg
         }
 
     def sync_to(self, sync_viewer):

@@ -1,5 +1,6 @@
 from .viewer_sync_adapter import ViewerSyncAdapter
 
+
 class MastSyncManager():
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -18,4 +19,3 @@ class MastSyncManager():
         for id, adapter in self._adapters.items():
             if id != viewer_id:
                 adapter.sync_to(sync_adapter)
-

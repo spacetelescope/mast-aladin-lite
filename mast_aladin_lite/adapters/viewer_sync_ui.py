@@ -1,6 +1,7 @@
 import ipywidgets as widgets
 from IPython.display import display
 
+
 class ViewerSyncUI:
     def __init__(self, sync_manager):
         self.sync_manager = sync_manager

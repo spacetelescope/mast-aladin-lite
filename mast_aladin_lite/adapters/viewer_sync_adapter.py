@@ -2,6 +2,7 @@ from astropy.coordinates import SkyCoord
 from astropy.wcs import WCS
 from abc import ABC, abstractmethod
 
+
 class ViewerSyncAdapter(ABC):
     @abstractmethod
     def get_center(self) -> SkyCoord:
