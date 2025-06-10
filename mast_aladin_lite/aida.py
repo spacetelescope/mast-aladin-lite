@@ -36,7 +36,7 @@ class AID:
 
         if not isinstance(center, SkyCoord):
             raise TypeError(
-                "Invalid value for center. Center must be a SkyCoord or tuple of (X, Y)."
+                "`center` must be a SkyCoord object."
             )
 
         self.app.target = center
