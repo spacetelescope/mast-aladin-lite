@@ -1,18 +1,13 @@
-import pytest
-from mast_aladin_lite import MastAladin
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 from astropy.tests.helper import assert_quantity_allclose
 
 
-@pytest.fixture
-def MastAladin_helper():
-    return MastAladin()
-
 def assert_coordinate_close(coord1, coord2, atol=1 * u.arcsec):
     # check that two coordinates are within some separation tolerance
     separation = coord1.separation(coord2)
-    assert_quantity_allclose(separation, atol=atol)
+    assert_quantity_allclose(separation, desired=0*u.arcsec, atol=atol)
+
 
 def test_mast_aladin_has_aid(MastAladin_helper):
     assert hasattr(MastAladin_helper, 'aid')
