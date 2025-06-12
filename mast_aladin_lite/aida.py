@@ -79,8 +79,9 @@ class AID:
 
         Raises
         ------
-        TypeError
-            Given coordinates are not provided as SkyCoord.
+        NotImplementedError
+            Given `sky_or_pixel` is not "sky" or `None`.
+            Given `image_label` is not `None`.
 
         """
 
