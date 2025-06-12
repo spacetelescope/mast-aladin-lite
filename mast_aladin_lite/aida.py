@@ -73,6 +73,9 @@ class AID:
                 Center the viewer on this coordinate.
             - fov : `~astropy.coordinates.Angle`
                 An object representing the field of view.
+            - image_label: None
+                A string representing the label of the image, always `None`
+                for aladin-lite since it has one 'image" per viewer.
 
         Raises
         ------
@@ -97,5 +100,6 @@ class AID:
 
         viewport_state["center"] = self.app.target
         viewport_state["fov"] = self.app.fov
+        viewport_state["image_label"] = None
 
         return viewport_state

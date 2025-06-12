@@ -32,12 +32,13 @@ def test_mast_aladin_aid_set_viewport(MastAladin_helper):
 
 
 def test_mast_aladin_aid_get_viewport(MastAladin_helper):
-    # check that the default center coordinate is (0, 0) deg and
-    # the default fov is 60.0 deg
+    # check that the default center coordinate is (0, 0) deg,
+    # the default fov is 60.0 deg, and the image_label is None
     default_center = SkyCoord(0, 0, unit='deg')
     default_viewport = MastAladin_helper.aid.get_viewport()
     assert_coordinate_close(default_viewport["center"], default_center)
     assert_angle_close(Angle(60, u.deg), default_viewport["fov"])
+    assert default_viewport["image_label"] is None
 
 
 def test_mast_aladin_aid_get_and_set_viewport_roundtrip(MastAladin_helper):
@@ -55,6 +56,7 @@ def test_mast_aladin_aid_get_and_set_viewport_roundtrip(MastAladin_helper):
     midpoint_viewport = MastAladin_helper.aid.get_viewport()
     assert_coordinate_close(midpoint_viewport["center"], target_coords)
     assert_angle_close(Angle(60, u.deg), midpoint_viewport["fov"])
+    assert midpoint_viewport["image_label"] is None
 
     # change viewport settings back to default
     MastAladin_helper.aid.set_viewport(center=default_viewport["center"])
@@ -63,3 +65,4 @@ def test_mast_aladin_aid_get_and_set_viewport_roundtrip(MastAladin_helper):
     final_viewport = MastAladin_helper.aid.get_viewport()
     assert_coordinate_close(final_viewport["center"], default_viewport["center"])
     assert_angle_close(default_viewport["fov"], final_viewport["fov"])
+    assert final_viewport["image_label"] is None
