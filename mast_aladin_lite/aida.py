@@ -43,7 +43,10 @@ class AID:
         self.app.target = center
 
     def get_viewport(
-            self, sky_or_pixel: str | None = "sky", image_label: str | None = None) -> dict[str, Any]:
+        self,
+        sky_or_pixel: str | None = "sky",
+        image_label: str | None = None
+    ) -> dict[str, Any]:
         """
         Gets the current viewport of the viewer.
         Presently, returns a dictionary containing the viewer's `center`,
@@ -82,12 +85,14 @@ class AID:
 
         if sky_or_pixel != "sky" and sky_or_pixel is not None:
             raise NotImplementedError(
-                "aladin-lite is a HiPS viewer without a concept of pixels. `sky_or_pixel` must be set to 'sky' or `None`"
+                "aladin-lite is a HiPS viewer without a concept of pixels."
+                "`sky_or_pixel` must be set to 'sky' or `None`"
             )
 
         if image_label is not None:
             raise NotImplementedError(
-                "aladin-lite only shows one 'image' per viewer, and does not need the concept of labels. `image_label` must be set to `None`."
+                "aladin-lite only shows one 'image' per viewer, and does not need"
+                "the concept of labels. `image_label` must be set to `None`."
             )
 
         viewport_state["center"] = self.app.target
