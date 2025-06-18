@@ -9,16 +9,16 @@ def assert_coordinate_close(coord1, coord2, atol=1 * u.arcsec):
     assert_quantity_allclose(separation, desired=0*u.arcsec, atol=atol)
 
 
-def test_mast_aladin_has_aid(MastAladin_helper):
-    assert hasattr(MastAladin_helper, 'aid')
-    assert callable(getattr(MastAladin_helper.aid, 'set_viewport', None))
+def test_mast_aladin_has_aid(MastAladin_app):
+    assert hasattr(MastAladin_app, 'aid')
+    assert callable(getattr(MastAladin_app.aid, 'set_viewport', None))
 
 
-def test_mast_aladin_aid_set_viewport(MastAladin_helper):
+def test_mast_aladin_aid_set_viewport(MastAladin_app):
     # check that the default center coordinate is (0, 0) deg before
     # we test the setter for center:
     default_center = SkyCoord(0, 0, unit='deg')
-    assert_coordinate_close(MastAladin_helper.target, default_center)
+    assert_coordinate_close(MastAladin_app.target, default_center)
     target_coords = SkyCoord(45, 45, unit='deg')
-    MastAladin_helper.aid.set_viewport(center=target_coords)
-    assert_coordinate_close(MastAladin_helper.target, target_coords)
+    MastAladin_app.aid.set_viewport(center=target_coords)
+    assert_coordinate_close(MastAladin_app.target, target_coords)
