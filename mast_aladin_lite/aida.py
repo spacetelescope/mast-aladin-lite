@@ -1,5 +1,4 @@
 from astropy.coordinates import SkyCoord
-from typing import Any
 
 
 class AID:
@@ -43,27 +42,20 @@ class AID:
         self.app.target = center
 
     def get_viewport(
-        self,
-        sky_or_pixel: str | None = "sky",
-        image_label: str | None = None
-    ) -> dict[str, Any]:
+        self, sky_or_pixel="sky", image_label=None
+    ):
         """
-        Gets the current viewport of the viewer.
-        Presently, returns a dictionary containing the viewer's `center`,
-        given as `~astropy.coordinates.SkyCoord` objects, and the viewer's
-        `fov`, given as an `~astropy.units.Angle` object.
+        Gets the viewport center and field of view.
 
         Parameters
         ----------
         sky_or_pixel : str, optional
-            If 'sky', the center will be returned as a `SkyCoord` object.
-            If `None`, the default behavior is to return the center as a `SkyCoord`.
-            Any other values will raise the error that "aladin-lite is a HiPS viewer
-            without a concept of pixels"
+            If `"sky"` or `None`, the viewport center and field of view will be returned
+            in world coordinates. `"pixel"` is not supported for HiPS viewers.
         image_label : str, optional
-            The label of the image to get the viewport for. If a value is provided,
-            the error will be raised that "aladin-lite only shows one 'image' per
-            viewer, and does not need the concept of labels”.
+            `image_label` is a required argument for ``AID`` API compatibility,
+            but it is not relevant for HiPS browsers like aladin-lite. If not
+            `None`, an error will be raised.
 
         Returns
         -------
@@ -75,7 +67,7 @@ class AID:
                 An object representing the field of view.
             - image_label: None
                 A string representing the label of the image, always `None`
-                for aladin-lite since it has one 'image" per viewer.
+                for aladin-lite.
 
         Raises
         ------
@@ -84,8 +76,6 @@ class AID:
             Given `image_label` is not `None`.
 
         """
-
-        viewport_state = {}
 
         if sky_or_pixel != "sky" and sky_or_pixel is not None:
             raise NotImplementedError(
@@ -99,8 +89,10 @@ class AID:
                 "the concept of labels. `image_label` must be set to `None`."
             )
 
-        viewport_state["center"] = self.app.target
-        viewport_state["fov"] = self.app.fov
-        viewport_state["image_label"] = None
+        viewport_state = dict(
+            center=self.app.target,
+            fov=self.app.fov,
+            image_label=None
+        )
 
         return viewport_state

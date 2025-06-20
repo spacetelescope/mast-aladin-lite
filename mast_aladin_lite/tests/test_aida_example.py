@@ -1,7 +1,6 @@
 from astropy.coordinates import SkyCoord, Angle
 import astropy.units as u
 from astropy.tests.helper import assert_quantity_allclose
-import numpy as np
 
 
 def assert_coordinate_close(coord1, coord2, atol=1 * u.arcsec):
@@ -12,7 +11,7 @@ def assert_coordinate_close(coord1, coord2, atol=1 * u.arcsec):
 
 def assert_angle_close(angle1, angle2, atol=1 * u.arcsec):
     # check that two angles are within some separation tolerance
-    difference = np.abs(angle1 - angle2)
+    difference = abs(angle1 - angle2)
     assert_quantity_allclose(difference, desired=0*u.arcsec, atol=atol)
 
 
