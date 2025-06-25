@@ -45,9 +45,3 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-
-[tool.coverage]
-paths.source = [
-    "mast_aladin_lite",
-    "D:/a/mast-aladin-lite/mast-aladin-lite/.tox/py311-test-cov/Lib/site-packages/mast_aladin_lite",
-]
