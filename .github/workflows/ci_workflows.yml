@@ -97,10 +97,10 @@ jobs:
         pattern: coverage_*
         merge-multiple: true
     - name: Upload report to Codecov
-      if: ${{ hashFiles('coverage.xml') != '' }}
+      if: ${{ hashFiles('coverage/**/*.xml') != '' }}
       uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d  # v5.4.2
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: coverage.xml
+        directory: coverage
         fail_ci_if_error: true
         verbose: true
