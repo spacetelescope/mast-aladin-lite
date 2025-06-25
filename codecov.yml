@@ -5,4 +5,4 @@ coverage:
         target: 90%
         threshold: 0.01%
 fixes:
-  - "*/site-packages/::"
+  - "D:/a/mast-aladin-lite/mast-aladin-lite/.tox/py311-test-cov/Lib/site-packages::"
