@@ -102,5 +102,6 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: coverage/coverage.xml
+        network_filter: coverage
         fail_ci_if_error: true
         verbose: true
