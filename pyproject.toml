@@ -45,3 +45,13 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
+
+[tool.coverage.run]
+source = ["mast_aladin_lite"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.coverage.xml]
+output = "coverage.xml"
