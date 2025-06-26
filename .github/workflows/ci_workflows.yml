@@ -84,12 +84,16 @@ jobs:
         if-no-files-found: error
 
   upload-codecov:
+  
     needs: [ ci_tests ]
     permissions:
       contents: none
     runs-on: ubuntu-latest
     name: Upload Coverage
     steps:
+    # The checkout step should not be necessary but adding to work around CodeCov upload issue
+    # see: https://github.com/codecov/codecov-action/issues/1801
+    - uses: actions/checkout@v4
     - name: Download coverage artifacts
       uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
       with:
