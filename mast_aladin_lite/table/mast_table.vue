@@ -124,4 +124,8 @@ module.exports = {
       background-color: rgb(0, 97, 126); /* MAST button background lighter-blue color */
     }
 }
+.v-tooltip__content {
+  opacity: 1 !important;
+  background-color: rgb(0, 97, 126);
+}
 </style>
