@@ -9,6 +9,10 @@ dependencies = [
     "ipyaladin",
     "astroquery",
     "sidecar",
+    "traitlets",
+    "ipypopout",
+    "ipyvuetify",
+    "ipywidgets",
 ]
 dynamic = [
     "version",
