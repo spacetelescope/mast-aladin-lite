@@ -49,7 +49,7 @@ class MastTable(VuetifyTemplate):
     clear_btn_lbl = Unicode('Clear Table').tag(sync=True)
     items_per_page = Int(5).tag(sync=True)
     popout_button = Any().tag(sync=True, **widget_serialization)
-    show_tooltips = Bool(True).tag(sync=True)
+    show_tooltips = Bool(False).tag(sync=True)
     menu_open = Bool(False).tag(sync=True)
 
     table = None
@@ -86,7 +86,6 @@ class MastTable(VuetifyTemplate):
 
         self.headers_visible = columns
 
-        global _table_widgets
         _table_widgets[len(_table_widgets)] = self
 
     @observe('selected_rows')
