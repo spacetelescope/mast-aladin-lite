@@ -1,6 +1,6 @@
 from ipyaladin import Aladin
 from mast_aladin_lite.aida import AID
-from mast_aladin_lite.table import TableWidget
+from mast_aladin_lite.table import MastTable
 
 from ipywidgets import widgets
 
@@ -26,7 +26,7 @@ class MastAladin(Aladin):
 
     def load_table(self, table, name='table'):
         self.add_table(table, name=name, color="lime", shape="circle", source_size=10)
-        table_widget = TableWidget(table)
+        table_widget = MastTable(table)
         self.tables[name] = self.selected_table = table_widget
 
 
