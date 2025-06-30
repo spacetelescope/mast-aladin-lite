@@ -1,7 +1,7 @@
 <template>
-  <div v-if="show_if_empty || items.length" style="margin: 20px">
-    <v-row style="max-width: 400px;">
-      <v-col>
+  <div v-if="show_if_empty || items.length">
+    <v-row class="text-right">
+      <v-col style="max-width: 400px;">
       <div class="row-select">
         <v-select
           class="no-hint"
@@ -41,21 +41,30 @@
         </template>
         </v-select>
       </div>
-    </v-col>
+      </v-col>
+
+      <v-col>
+        <jupyter-widget :widget="popout_button"></jupyter-widget>
+
+        <v-menu v-model="menu_open" :close-on-content-click="false" anchor="start end">
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" icon><v-icon>mdi-menu</v-icon></v-btn>
+          </template>
+
+          <v-card min-width="300">
+            <v-list>
+              <v-list-item>
+                <v-switch v-model="show_tooltips" color="rgb(0, 97, 126)" label="Show column definition on hover"></v-switch>
+              </v-list-item>
+            </v-list>
+          </v-card>
+
+        </v-menu>
+      </v-col>
     </v-row>
     <v-row>
-    <v-col style="margin-left: 15px">
-      <v-row>
-        <v-switch v-model="show_tooltips" color="rgb(0, 97, 126)" style="width: 15vw;" label="Show column definition on hover"></v-switch>
-      </v-row>
-      <v-row>
-        <v-label><jupyter-widget :widget="popout_button"></jupyter-widget> Popout widget</v-label>
-      </v-row>
-    </v-col>
-    </v-row>
-    <v-row>
-      <div class="table-component">
-      <v-container>
+      <div class="table-component" style="padding: 10px;">
+      <v-container fluid style="width: 90vw;">
       <v-data-table
         dense
         :headers="headers_visible_sorted_description"
@@ -68,18 +77,20 @@
         class="elevation-2"
       >
       <template v-for="h in headers_visible_sorted_description" v-slot:[`header.${h.value}`]="{ header }">
-        <div v-if="show_tooltips" style="color: white;">
-          <v-tooltip top>
-            <template v-slot:activator="{ on }">              
-              <span v-on="on"><strong>{{h.name}}</strong></span>
-            </template>
-              <p style="width: 300px">
-                <strong>{{h.name}}</strong>: {{h.description}}
-              </p>
-          </v-tooltip>
-        </div>
-        <div v-else>
-            <span><strong>{{h.name}}</strong></span>
+        <div style="color: white;">
+          <div v-if="show_tooltips">
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">              
+                <span v-on="on"><strong>{{h.name}}</strong></span>
+              </template>
+                <p style="width: 300px">
+                  <strong>{{h.name}}</strong>: {{h.description}}
+                </p>
+            </v-tooltip>
+          </div>
+          <div v-else>
+              <span><strong>{{h.name}}</strong></span>
+          </div>
         </div>
       </template>
       </v-data-table>

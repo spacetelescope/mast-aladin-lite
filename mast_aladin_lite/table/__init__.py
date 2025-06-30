@@ -1,1 +1,1 @@
-from .table_widget import TableWidget
+from .mast_table import MastTable
