@@ -1,5 +1,6 @@
 <template>
   <div v-if="show_if_empty || items.length">
+  <v-container fluid>
     <v-row class="text-right">
       <v-col style="max-width: 400px;">
       <div class="row-select">
@@ -63,8 +64,8 @@
       </v-col>
     </v-row>
     <v-row>
-      <div class="table-component" style="padding: 10px;">
-      <v-container fluid style="width: 90vw;">
+      <v-container fluid>
+      <div class="table-component" style="padding: 5px;">
       <v-data-table
         dense
         :headers="headers_visible_sorted_description"
@@ -94,9 +95,10 @@
         </div>
       </template>
       </v-data-table>
-      </v-container>
       </div>
+      </v-container>
     </v-row>
+    </v-container>
   </div>
 </template>
 
