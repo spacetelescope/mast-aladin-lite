@@ -2,9 +2,11 @@ from .viewer_sync_adapter import ViewerSyncAdapter
 
 
 class ImvizSyncAdapter(ViewerSyncAdapter):
-    def __init__(self, viewer):
+    def __init__(self):
         # todo: assert the type of the viewer is jdaviz/imviz
-        self.viewer = viewer
+        from jdaviz.configs.imviz.helper import _current_app
+        self.app = _current_app
+        self.viewer = _current_app.default_viewer
 
     def get_center(self):
         return self.viewer._obj._get_center_skycoord()
@@ -31,6 +33,11 @@ class ImvizSyncAdapter(ViewerSyncAdapter):
 
     def sync_to(self, sync_viewer):
         self.viewer._obj.set_limits(*sync_viewer.get_limits(self._wcs))
+
+    def show(self):
+        self.app.show()
+        self.app.link_data(align_by='wcs')
+        self.app.plugins['Orientation'].set_north_up_east_left()
 
     @property
     def _wcs(self):

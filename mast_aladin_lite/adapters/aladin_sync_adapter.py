@@ -3,12 +3,12 @@ from astropy.coordinates import SkyCoord
 import numpy as np
 
 from .viewer_sync_adapter import ViewerSyncAdapter
+from mast_aladin_lite.app import gca
 
 
 class AladinSyncAdapter(ViewerSyncAdapter):
-    def __init__(self, viewer):
-        # todo: assert the type of the viewer is ipyaladin
-        self.viewer = viewer
+    def __init__(self):
+        self.viewer = gca()
 
     def get_center(self):
         return self.viewer.target
@@ -56,3 +56,6 @@ class AladinSyncAdapter(ViewerSyncAdapter):
     def sync_to(self, sync_viewer):
         self.viewer.target = sync_viewer.get_center()
         self.viewer.fov = sync_viewer.get_fov()["x"].to_value()
+
+    def show(self):
+        display(self.viewer)
