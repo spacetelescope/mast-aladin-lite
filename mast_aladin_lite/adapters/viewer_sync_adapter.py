@@ -19,3 +19,7 @@ class ViewerSyncAdapter(ABC):
     @abstractmethod
     def sync_to(self, sync_viewer):
         raise NotImplementedError
+
+    @abstractmethod
+    def show(self):
+        raise NotImplementedError

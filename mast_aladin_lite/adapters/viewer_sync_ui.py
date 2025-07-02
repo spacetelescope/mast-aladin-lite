@@ -1,17 +1,23 @@
 import ipywidgets as widgets
+from ipywidgets import Layout
 from IPython.display import display
 
 from mast_aladin_lite.adapters import ImvizSyncAdapter, AladinSyncAdapter
 from mast_aladin_lite.app import gca
 
 
-class ViewerSyncUI:
+class ViewerSyncUI():
     def __init__(self):
+
+        self.mast_aladin_sync_adapter = AladinSyncAdapter()
+        self.imviz_sync_adapter = ImvizSyncAdapter()
+
         # configure the mast aladin sync button
         self.mast_aladin_sync_button = widgets.Button(
             description="Sync to Mast Aladin Viewer",
             button_style="primary",
-            tooltip="Sync all other viewers to the Mast Aladin viewer"
+            tooltip="Sync all other viewers to the Mast Aladin viewer",
+            layout=Layout(flex='1 1 auto')
         )
         self.mast_aladin_sync_button.on_click(self._on_sync_to_mast_aladin)
 
@@ -19,17 +25,24 @@ class ViewerSyncUI:
         self.imviz_sync_button = widgets.Button(
             description="Sync to Imviz Viewer",
             button_style="primary",
-            tooltip="Sync all other viewers to the Imviz viewer"
+            tooltip="Sync all other viewers to the Imviz viewer",
+            layout=Layout(flex='1 1 auto')
         )
         self.imviz_sync_button.on_click(self._on_sync_to_imviz)
 
         self.status_output = widgets.Output()
 
-        self.ui = widgets.VBox([
-            self.mast_aladin_sync_button,
+        box_layout = Layout(display='flex',
+                    flex_flow='row', 
+                    align_items='stretch', 
+                    width='100%')
+
+        self.sync_buttons = widgets.Box([
             self.imviz_sync_button,
+            self.mast_aladin_sync_button,
             self.status_output
-        ])
+        ],
+        layout=box_layout)
 
     def _on_sync_clicked(self, b):
         viewer_id = self.viewer_selector.value
@@ -43,12 +56,12 @@ class ViewerSyncUI:
                 print(f"Sync failed: {e}")
 
     def _on_sync_to_mast_aladin(self, b):
-        from jdaviz.configs.imviz.helper import _current_app
-        ImvizSyncAdapter(_current_app.default_viewer).sync_to(AladinSyncAdapter(gca()))
+        self.imviz_sync_adapter.sync_to(self.mast_aladin_sync_adapter)
 
     def _on_sync_to_imviz(self, b):
-        from jdaviz.configs.imviz.helper import _current_app
-        AladinSyncAdapter(gca()).sync_to(ImvizSyncAdapter(_current_app.default_viewer))
+        self.mast_aladin_sync_adapter.sync_to(self.imviz_sync_adapter)
 
     def display(self):
-        display(self.ui)
+        self.imviz_sync_adapter.show()
+        display(self.sync_buttons)
+        self.mast_aladin_sync_adapter.show()
