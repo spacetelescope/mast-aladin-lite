@@ -58,4 +58,4 @@ class AladinSyncAdapter(ViewerSyncAdapter):
         self.viewer.fov = sync_viewer.get_fov()["x"].to_value()
 
     def show(self):
-        display(self.viewer)
+        display(self.viewer)  # noqa:F821
