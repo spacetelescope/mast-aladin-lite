@@ -3,7 +3,6 @@ from ipywidgets import Layout
 from IPython.display import display
 
 from mast_aladin_lite.adapters import ImvizSyncAdapter, AladinSyncAdapter
-from mast_aladin_lite.app import gca
 
 
 class ViewerSyncUI():
@@ -32,17 +31,19 @@ class ViewerSyncUI():
 
         self.status_output = widgets.Output()
 
-        box_layout = Layout(display='flex',
-                    flex_flow='row', 
-                    align_items='stretch', 
-                    width='100%')
+        box_layout = Layout(
+            display='flex',
+            flex_flow='row',
+            align_items='stretch',
+            width='100%')
 
-        self.sync_buttons = widgets.Box([
-            self.imviz_sync_button,
-            self.mast_aladin_sync_button,
-            self.status_output
-        ],
-        layout=box_layout)
+        self.sync_buttons = widgets.Box(
+            [
+                self.imviz_sync_button,
+                self.mast_aladin_sync_button,
+                self.status_output
+            ],
+            layout=box_layout)
 
     def _on_sync_clicked(self, b):
         viewer_id = self.viewer_selector.value
