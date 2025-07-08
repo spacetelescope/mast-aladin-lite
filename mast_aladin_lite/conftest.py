@@ -2,6 +2,7 @@ import os
 import pytest
 from astropy.table import Table
 from mast_aladin_lite import MastAladin
+from jdaviz import Imviz
 
 
 @pytest.fixture
@@ -24,3 +25,8 @@ def mast_observation_table():
         os.path.dirname(__file__), "tests", "data", "mm_jwst_M4.ecsv"
     )
     return Table.read(path)
+
+@pytest.fixture
+def imviz_helper():
+    return Imviz()
+
