@@ -21,13 +21,18 @@ def test_mast_aladin_has_aid(MastAladin_app):
 
 
 def test_mast_aladin_aid_set_viewport(MastAladin_app):
-    # check that the default center coordinate is (0, 0) deg before
-    # we test the setter for center:
+    # check that the default center coordinate is (0, 0) deg and
+    # the default rotation angle is 0 deg 
     default_center = SkyCoord(0, 0, unit='deg')
+    default_rotation = Angle(0, unit='deg')
     assert_coordinate_close(MastAladin_app.target, default_center)
+    assert_angle_close(MastAladin_app.rotation, default_rotation)
+    # test the setter for center and rotation
     target_coords = SkyCoord(45, 45, unit='deg')
-    MastAladin_app.aid.set_viewport(center=target_coords)
+    target_rotation = Angle(45, unit='deg')
+    MastAladin_app.aid.set_viewport(center=target_coords, rotation=target_rotation)
     assert_coordinate_close(MastAladin_app.target, target_coords)
+    assert_angle_close(MastAladin_app.rotation, target_rotation)
 
 
 def test_mast_aladin_aid_get_viewport(MastAladin_app):
@@ -49,19 +54,25 @@ def test_mast_aladin_aid_get_and_set_viewport_roundtrip(MastAladin_app):
 
     # change viewport settings
     target_coords = SkyCoord(45, 45, unit='deg')
-    MastAladin_app.aid.set_viewport(center=target_coords)
+    target_rotation = Angle(45, unit='deg')
+    MastAladin_app.aid.set_viewport(center=target_coords, rotation=target_rotation)
 
     # check new viewport settings
     midpoint_viewport = MastAladin_app.aid.get_viewport()
     assert_coordinate_close(midpoint_viewport["center"], target_coords)
-    assert_angle_close(Angle(60, u.deg), midpoint_viewport["fov"])
+    assert_angle_close(midpoint_viewport["rotation"], target_rotation)
+    assert_angle_close(midpoint_viewport["fov"], Angle(60, u.deg))
     assert midpoint_viewport["image_label"] is None
 
     # change viewport settings back to default
-    MastAladin_app.aid.set_viewport(center=default_viewport["center"])
+    MastAladin_app.aid.set_viewport(
+        center=default_viewport["center"], 
+        rotation=default_viewport["rotation"]
+    )
 
     # check final viewport settings
     final_viewport = MastAladin_app.aid.get_viewport()
     assert_coordinate_close(final_viewport["center"], default_viewport["center"])
-    assert_angle_close(default_viewport["fov"], final_viewport["fov"])
+    assert_angle_close(final_viewport["rotation"], default_viewport["rotation"])
+    assert_angle_close(final_viewport["fov"], default_viewport["fov"])
     assert final_viewport["image_label"] is None

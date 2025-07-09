@@ -1,4 +1,4 @@
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import SkyCoord, Angle
 
 
 class AID:
@@ -16,7 +16,9 @@ class AID:
     def __init__(self, mast_aladin):
         self.app = mast_aladin
 
-    def set_viewport(self, center):
+    def set_viewport(
+        self, center, rotation,
+    ):
         """
         Sets the viewport based on provided parameters.
         Presently, centers the viewer on a particular point, `center`,
@@ -26,11 +28,18 @@ class AID:
         ----------
         center : `~astropy.coordinates.SkyCoord`
             Center the viewer on this coordinate.
+        rotation : `~astropy.coordinates.Angle`, float
+            This is the view center to north pole angle in degrees.
+            Positive angles rotate the view in the counter clockwise
+            order (or towards the east).
+            It can be set with either a float number in degrees
+            or an astropy.coordinates.Angle object.
 
         Raises
         ------
-        TypeError
+        TypeErrors
             Given coordinates are not provided as SkyCoord.
+            Given rotation is not provided as Angle or float.
 
         """
 
@@ -38,14 +47,20 @@ class AID:
             raise TypeError(
                 "`center` must be a SkyCoord object."
             )
+        
+        if not isinstance(rotation, Angle) and not isinstance(rotation, float):
+            raise TypeError(
+                "`rotation` must be an Angle object or float."
+            )
 
         self.app.target = center
+        self.app.rotation = rotation
 
     def get_viewport(
         self, sky_or_pixel="sky", image_label=None
     ):
         """
-        Gets the viewport center and field of view.
+        Gets the viewport center, rotation, and field of view.
 
         Parameters
         ----------
@@ -63,6 +78,8 @@ class AID:
             A dictionary containing:
             - center : `~astropy.coordinates.SkyCoord`
                 Center the viewer on this coordinate.
+            - rotation : `~astropy.coordinates.Angle`
+                Angle of the view center to north pole angle in degrees.
             - fov : `~astropy.coordinates.Angle`
                 An object representing the field of view.
             - image_label: None
@@ -91,6 +108,7 @@ class AID:
 
         viewport_state = dict(
             center=self.app.target,
+            rotation=self.app.rotation,
             fov=self.app.fov,
             image_label=None
         )
