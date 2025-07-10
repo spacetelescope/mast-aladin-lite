@@ -22,7 +22,7 @@ def test_mast_aladin_has_aid(MastAladin_app):
 
 def test_mast_aladin_aid_set_viewport(MastAladin_app):
     # check that the default center coordinate is (0, 0) deg and
-    # the default rotation angle is 0 deg 
+    # the default rotation angle is 0 deg
     default_center = SkyCoord(0, 0, unit='deg')
     default_rotation = Angle(0, unit='deg')
     assert_coordinate_close(MastAladin_app.target, default_center)
@@ -66,7 +66,7 @@ def test_mast_aladin_aid_get_and_set_viewport_roundtrip(MastAladin_app):
 
     # change viewport settings back to default
     MastAladin_app.aid.set_viewport(
-        center=default_viewport["center"], 
+        center=default_viewport["center"],
         rotation=default_viewport["rotation"]
     )
 

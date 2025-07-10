@@ -47,7 +47,7 @@ class AID:
             raise TypeError(
                 "`center` must be a SkyCoord object."
             )
-        
+
         if not isinstance(rotation, Angle) and not isinstance(rotation, float):
             raise TypeError(
                 "`rotation` must be an Angle object or float."
