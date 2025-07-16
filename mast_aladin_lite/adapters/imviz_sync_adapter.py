@@ -34,6 +34,12 @@ class ImvizSyncAdapter(ViewerSyncAdapter):
     def sync_to(self, sync_viewer):
         self.viewer._obj.set_limits(*sync_viewer.get_limits(self._wcs))
 
+    def add_callback(self, func):
+        self.viewer._obj.state.add_callback('x_min', func)
+
+    def remove_callback(self, func):
+        self.viewer._obj.state.remove_callback('x_min', func)
+
     def show(self):
         self.app.show()
         self.app.link_data(align_by='wcs')

@@ -1,9 +1,11 @@
 import astropy.units as u
-from astropy.coordinates import SkyCoord
 import numpy as np
 
-from .viewer_sync_adapter import ViewerSyncAdapter
+from astropy.coordinates import SkyCoord
+from IPython.display import display
 from mast_aladin_lite.app import gca
+
+from .viewer_sync_adapter import ViewerSyncAdapter
 
 
 class AladinSyncAdapter(ViewerSyncAdapter):
@@ -57,5 +59,11 @@ class AladinSyncAdapter(ViewerSyncAdapter):
         self.viewer.target = sync_viewer.get_center()
         self.viewer.fov = sync_viewer.get_fov()["x"].to_value()
 
+    def add_callback(self, func):
+        self.viewer.observe(func, names=["_fov", "_target"])
+
+    def remove_callback(self, func):
+        self.viewer.unobserve(func, names=["_fov", "_target"])
+
     def show(self):
-        display(self.viewer)  # noqa:F821
+        display(self.viewer)
