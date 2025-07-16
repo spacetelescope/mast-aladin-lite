@@ -1,68 +1,42 @@
 import ipywidgets as widgets
-from ipywidgets import Layout
 from IPython.display import display
 
-from mast_aladin_lite.adapters import ImvizSyncAdapter, AladinSyncAdapter
+from mast_aladin_lite.adapters import ImvizSyncAdapter, AladinSyncAdapter, SyncManager
 
 
 class ViewerSyncUI():
     def __init__(self):
 
-        self.mast_aladin_sync_adapter = AladinSyncAdapter()
-        self.imviz_sync_adapter = ImvizSyncAdapter()
+        self.mast_aladin = AladinSyncAdapter()
+        self.imviz = ImvizSyncAdapter()
+        self.sync_manager = SyncManager()
 
-        # configure the mast aladin sync button
-        self.mast_aladin_sync_button = widgets.Button(
-            description="Sync to Mast Aladin Viewer",
-            button_style="primary",
-            tooltip="Sync all other viewers to the Mast Aladin viewer",
-            layout=Layout(flex='1 1 auto')
+        self.buttons = widgets.ToggleButtons(
+            options=['None', 'Imviz', 'Mast Aladin'],
+            disabled=False,
+            button_style='',
+            tooltips=['No Syncing', 'Sync to Imviz', 'Sync to Mast Aladin'],
+            style=widgets.ToggleButtonsStyle(button_width="33.1%")
         )
-        self.mast_aladin_sync_button.on_click(self._on_sync_to_mast_aladin)
 
-        # configure the imviz sybnc button
-        self.imviz_sync_button = widgets.Button(
-            description="Sync to Imviz Viewer",
-            button_style="primary",
-            tooltip="Sync all other viewers to the Imviz viewer",
-            layout=Layout(flex='1 1 auto')
-        )
-        self.imviz_sync_button.on_click(self._on_sync_to_imviz)
+        self.buttons.observe(self._handle_sync)
 
-        self.status_output = widgets.Output()
-
-        box_layout = Layout(
-            display='flex',
-            flex_flow='row',
-            align_items='stretch',
-            width='100%')
-
-        self.sync_buttons = widgets.Box(
-            [
-                self.imviz_sync_button,
-                self.mast_aladin_sync_button,
-                self.status_output
-            ],
-            layout=box_layout)
-
-    def _on_sync_clicked(self, b):
-        viewer_id = self.viewer_selector.value
-        with self.status_output:
-            self.status_output.clear_output()
-            print(f"Syncing all viewers to: {viewer_id}")
-            try:
-                self.sync_manager.sync_to(viewer_id)
-                print("Sync successful")
-            except Exception as e:
-                print(f"Sync failed: {e}")
-
-    def _on_sync_to_mast_aladin(self, b):
-        self.imviz_sync_adapter.sync_to(self.mast_aladin_sync_adapter)
-
-    def _on_sync_to_imviz(self, b):
-        self.mast_aladin_sync_adapter.sync_to(self.imviz_sync_adapter)
+    def _handle_sync(self, _):
+        match self.buttons.index:
+            case 0:
+                self.sync_manager.stop_real_time_sync()
+            case 1:
+                self.sync_manager.start_real_time_sync(
+                    source=self.imviz,
+                    destination=self.mast_aladin
+                )
+            case 2:
+                self.sync_manager.start_real_time_sync(
+                    source=self.mast_aladin,
+                    destination=self.imviz
+                )
 
     def display(self):
-        self.imviz_sync_adapter.show()
-        display(self.sync_buttons)
-        self.mast_aladin_sync_adapter.show()
+        self.imviz.show()
+        display(self.buttons)
+        self.mast_aladin.show()

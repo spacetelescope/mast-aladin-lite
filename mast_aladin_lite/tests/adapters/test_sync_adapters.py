@@ -1,5 +1,5 @@
+from mast_aladin_lite.adapters import AladinSyncAdapter, ImvizSyncAdapter
 from mast_aladin_lite.app import MastAladin
-from mast_aladin_lite.adapters import ImvizSyncAdapter, AladinSyncAdapter
 from mast_aladin_lite.tests.test_utils import BaseImviz
 
 
