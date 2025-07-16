@@ -26,4 +26,3 @@ class SyncManager():
 
         if prev_source:
             self.source.remove_callback(self._callback)
-
