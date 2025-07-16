@@ -20,11 +20,10 @@ class SyncManager():
         self.source.add_callback(self._callback)
 
     def stop_real_time_sync(self):
-        try:
-            if self.source:
-                self.source.remove_callback(self._callback)
-        except Exception:
-            pass
-
+        prev_source = self.source
         self.source = None
         self.destination = None
+
+        if prev_source:
+            self.source.remove_callback(self._callback)
+
