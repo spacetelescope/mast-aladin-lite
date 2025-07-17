@@ -1,4 +1,3 @@
-from ipywidgets import widgets
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 from astropy.utils.masked import Masked
@@ -13,7 +12,7 @@ _latest_instantiated_app = None
 
 
 class MastAladin(Aladin):
-    table_widgets = dict()
+    selected_table = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -22,14 +21,12 @@ class MastAladin(Aladin):
         # Astro Image Display (AID) API
         self.aid = AID(self)
 
-        self.selected_table = widgets.Output()
-
         global _latest_instantiated_app
         _latest_instantiated_app = self
 
     def load_table(self, table, name='table', load_footprints=True, update_viewport=True):
         table_widget = MastTable(table)
-        self.table_widgets[name] = self.selected_table = table_widget
+        self.selected_table = table_widget
 
         if load_footprints:
             if 's_region' in table.colnames:
