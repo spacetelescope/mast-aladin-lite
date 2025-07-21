@@ -112,7 +112,7 @@ class MastTable(VuetifyTemplate):
 
         self._set_item_key(columns, unique_column)
 
-        self.headers_avail = columns
+        self.headers_avail = list(columns)
 
         # by default, remove the `s_region`` column
         # from the visible columns in the widget:
@@ -123,7 +123,7 @@ class MastTable(VuetifyTemplate):
 
         _table_widgets[len(_table_widgets)] = self
 
-        if update_viewport:
+        if update_viewport and self.app is not None:
             ra_column, dec_column = 'ra', 'dec'
 
             if ra_column not in table.colnames:
@@ -136,7 +136,7 @@ class MastTable(VuetifyTemplate):
             )
 
             # change the coordinate frame to match the coordinates in the MAST table:
-            self.target = center_coord
+            self.app.target = f"{center_coord.ra.degree} {center_coord.dec.degree}"
 
     def _set_item_key(self, table_columns, item_key, n_rows_slow=10e6):
         """
