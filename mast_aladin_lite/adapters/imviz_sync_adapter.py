@@ -2,10 +2,10 @@ from .viewer_sync_adapter import ViewerSyncAdapter
 
 
 class ImvizSyncAdapter(ViewerSyncAdapter):
-    def __init__(self):
+    def __init__(self, viewer=None):
         # todo: assert the type of the viewer is jdaviz/imviz
         from jdaviz.configs.imviz.helper import _current_app
-        self.app = _current_app
+        self.app = viewer if viewer else _current_app
         self.viewer = _current_app.default_viewer
 
     def get_center(self):
