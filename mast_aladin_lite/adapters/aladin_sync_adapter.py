@@ -9,8 +9,8 @@ from .viewer_sync_adapter import ViewerSyncAdapter
 
 
 class AladinSyncAdapter(ViewerSyncAdapter):
-    def __init__(self):
-        self.viewer = gca()
+    def __init__(self, viewer=None):
+        self.viewer = viewer if viewer else gca()
 
     def get_center(self):
         return self.viewer.target
