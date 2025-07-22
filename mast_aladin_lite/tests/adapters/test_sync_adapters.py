@@ -1,3 +1,4 @@
+from astropy.coordinates import SkyCoord
 from mast_aladin_lite.adapters import AladinSyncAdapter, ImvizSyncAdapter
 from mast_aladin_lite.app import MastAladin
 from mast_aladin_lite.tests.test_utils import BaseImviz
@@ -8,7 +9,8 @@ from pytest import approx
 class TestSyncAdapters(BaseImviz):
     def test_aladin_sync_from_imviz(self):
         # arrange
-        MastAladin(target="Cartwheel Galaxy", height=500)
+        target = SkyCoord(9.4213055, -33.71625419, unit="deg")
+        MastAladin(target=target, height=500)
         mast_aladin_sync_adapter = AladinSyncAdapter()
 
         imviz_sync_adapter = ImvizSyncAdapter()
@@ -28,7 +30,8 @@ class TestSyncAdapters(BaseImviz):
 
     def test_aladin_sync_to_imviz(self):
         # arrange
-        MastAladin(target="Cartwheel Galaxy", height=500)
+        target = SkyCoord(9.4213055, -33.71625419, unit="deg")
+        MastAladin(target=target, height=500)
         mast_aladin_sync_adapter = AladinSyncAdapter()
         mast_aladin_sync_adapter.viewer._fov_xy = {'x': 60, 'y': 12.583892617449665}
 

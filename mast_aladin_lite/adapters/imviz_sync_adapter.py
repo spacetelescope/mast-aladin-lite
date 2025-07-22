@@ -6,7 +6,7 @@ class ImvizSyncAdapter(ViewerSyncAdapter):
         # todo: assert the type of the viewer is jdaviz/imviz
         from jdaviz.configs.imviz.helper import _current_app
         self.app = viewer if viewer else _current_app
-        self.viewer = _current_app.default_viewer
+        self.viewer = self.app.default_viewer
 
     def get_center(self):
         return self.viewer._obj._get_center_skycoord()
