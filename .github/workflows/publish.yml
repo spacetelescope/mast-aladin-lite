@@ -39,13 +39,12 @@ jobs:
     - name: Check dist
       run: python -m twine check --strict dist/*
 
- # Uncomment after adding first round of tests.
-    # - name: Test package
-    #   run: |
-    #     cd ..
-    #     python -m venv testenv
-    #     testenv/bin/pip install pytest pytest-astropy pytest-tornasync mast-aladin-lite/dist/*.whl
-    #     testenv/bin/python -c "import mast_aladin_lite; mast_aladin_lite.test()"
+    - name: Test package
+      run: |
+        cd ..
+        python -m venv testenv
+        testenv/bin/pip install pytest pytest-astropy pytest-tornasync mast-aladin-lite/dist/*.whl
+        testenv/bin/pytest -p no:warnings mast-aladin-lite/mast_aladin_lite/tests
 
     # NOTE: Do not run this part for PR testing.
     - name: Publish distribution 📦 to PyPI
