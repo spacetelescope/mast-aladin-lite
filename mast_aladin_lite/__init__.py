@@ -3,3 +3,4 @@
 
 # Top-level API as exposed to users.
 from .app import MastAladin  # noqa: F401
+from .table import MastTable  # noqa: F401
