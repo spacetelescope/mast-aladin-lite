@@ -67,7 +67,7 @@ class AID:
                 if aspect_ratio > 1: #then set x
                     scale_factor = float(fov / current_fov)
                 else: #then set y
-                    scale_factor = float(fov / self.app._fov_xy["y"])
+                    scale_factor = float(fov / self.app._fov_xy["y"].value)
             
             self.app.fov = self.app.fov * scale_factor
 
