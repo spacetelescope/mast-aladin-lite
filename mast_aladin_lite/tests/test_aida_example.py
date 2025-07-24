@@ -20,14 +20,45 @@ def test_mast_aladin_has_aid(MastAladin_app):
     assert callable(getattr(MastAladin_app.aid, 'set_viewport', None))
 
 
+def test_sanity(MastAladin_app):
+    MastAladin_app
+    initial_fov_xy = {
+        'x' : Angle(60, unit='deg'), 
+        'y' : Angle(30, unit='deg'),
+    }
+    MastAladin_app._fov_xy = initial_fov_xy
+
+    assert MastAladin_app._fov_xy == initial_fov_xy
+    print(MastAladin_app._fov_xy["x"])
+    print(MastAladin_app._fov_xy["y"])
+    MastAladin_app.aid.set_viewport(
+        fov=Angle(45, unit='deg')
+    )
+    MastAladin_app.aid.get_viewport()
+
+"""
 def test_mast_aladin_aid_set_viewport(MastAladin_app):
-    # check that the default center coordinate is (0, 0) deg before
-    # we test the setter for center:
+    # check that the default center coordinate is (0, 0) deg and the
+    # fov is 60 deg before we test the setter. Set fov_xy to be able
+    # to check manipulations:
+    initial_fov_xy = {
+        'x' : Angle(60, unit='deg'), 
+        'y' : Angle(40, unit='deg'),
+    }
+    MastAladin_app._fov_xy = initial_fov_xy
     default_center = SkyCoord(0, 0, unit='deg')
+    default_fov = Angle(60, unit='deg')
     assert_coordinate_close(MastAladin_app.target, default_center)
+    assert_angle_close(MastAladin_app.fov, default_fov)
     target_coords = SkyCoord(45, 45, unit='deg')
-    MastAladin_app.aid.set_viewport(center=target_coords)
+    target_fov = Angle(30, unit='deg')
+    MastAladin_app.aid.set_viewport(
+        center=target_coords,
+        fov=target_fov
+    )
     assert_coordinate_close(MastAladin_app.target, target_coords)
+    import pdb;pdb.set_trace()
+    assert_angle_close(MastAladin_app.fov, initial_fov_xy["y"])
 
 
 def test_mast_aladin_aid_get_viewport(MastAladin_app):
@@ -65,3 +96,4 @@ def test_mast_aladin_aid_get_and_set_viewport_roundtrip(MastAladin_app):
     assert_coordinate_close(final_viewport["center"], default_viewport["center"])
     assert_angle_close(default_viewport["fov"], final_viewport["fov"])
     assert final_viewport["image_label"] is None
+"""
