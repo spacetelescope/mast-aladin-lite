@@ -1,4 +1,6 @@
-from astropy.coordinates import SkyCoord
+from astropy.coordinates import SkyCoord, Angle
+import astropy.units as u
+from echo import delay_callback
 
 
 class AID:
@@ -16,7 +18,7 @@ class AID:
     def __init__(self, mast_aladin):
         self.app = mast_aladin
 
-    def set_viewport(self, center):
+    def set_viewport(self, center=None, fov=None):
         """
         Sets the viewport based on provided parameters.
         Presently, centers the viewer on a particular point, `center`,
@@ -26,6 +28,8 @@ class AID:
         ----------
         center : `~astropy.coordinates.SkyCoord`
             Center the viewer on this coordinate.
+        fov : `~astropy.coordinates.Angle` or float
+            Set the width of the viewport to span `field_of_view`.
 
         Raises
         ------
@@ -34,12 +38,39 @@ class AID:
 
         """
 
-        if not isinstance(center, SkyCoord):
-            raise TypeError(
-                "`center` must be a SkyCoord object."
-            )
+        if center is not None:
+            if not isinstance(center, SkyCoord):
+                raise TypeError(
+                    "`center` must be a SkyCoord object."
+                )
+            
+            self.app.target = center
+        
+        if fov is not None:
+            scale_factor = 0
+            if isinstance(fov, (u.Quantity, Angle)):
+                fov = fov.value
+                
+            elif isinstance(fov, (float, int)):
+                if fov < 1:
+                    scale_factor = fov
 
-        self.app.target = center
+            else:
+                raise ValueError(
+                    f"`fov` must be an `~astropy.coordinates.Angle` or float, got {fov=}"
+                )
+
+            current_fov = self.app.fov.value
+            aspect_ratio = float(self.app._fov_xy["y"]/self.app._fov_xy["x"])
+            
+            if scale_factor == 0:
+                if aspect_ratio > 1: #then set x
+                    scale_factor = float(fov / current_fov)
+                else: #then set y
+                    scale_factor = float(fov / self.app._fov_xy["y"])
+            
+            self.app.fov = self.app.fov * scale_factor
+
 
     def get_viewport(
         self, sky_or_pixel="sky", image_label=None
@@ -64,7 +95,7 @@ class AID:
             - center : `~astropy.coordinates.SkyCoord`
                 Center the viewer on this coordinate.
             - fov : `~astropy.coordinates.Angle`
-                An object representing the field of view.
+                An object representing the field of view of the shorter axis.
             - image_label: None
                 A string representing the label of the image, always `None`
                 for aladin-lite.
@@ -89,9 +120,15 @@ class AID:
                 "the concept of labels. `image_label` must be set to `None`."
             )
 
+        aspect_ratio = float(self.app._fov_xy["y"]/self.app._fov_xy["x"])
+        if aspect_ratio > 1:
+            current_fov = self.app._fov_xy["x"]
+        else:
+            current_fov = self.app._fov_xy["y"]
+
         viewport_state = dict(
             center=self.app.target,
-            fov=self.app.fov,
+            fov=current_fov,
             image_label=None
         )
 
