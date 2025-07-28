@@ -1,6 +1,5 @@
 from astropy.coordinates import SkyCoord, Angle
 import astropy.units as u
-from echo import delay_callback
 
 
 class AID:
@@ -43,14 +42,14 @@ class AID:
                 raise TypeError(
                     "`center` must be a SkyCoord object."
                 )
-            
+
             self.app.target = center
-        
+
         if fov is not None:
             scale_factor = 0
             if isinstance(fov, (u.Quantity, Angle)):
                 fov = fov.value
-                
+
             elif isinstance(fov, (float, int)):
                 if fov < 1:
                     scale_factor = fov
@@ -62,15 +61,14 @@ class AID:
 
             current_fov = self.app.fov.value
             aspect_ratio = float(self.app._fov_xy["y"]/self.app._fov_xy["x"])
-            
+
             if scale_factor == 0:
                 if aspect_ratio > 1:
                     scale_factor = float(fov / current_fov)
                 else:
                     scale_factor = float(fov / self.app._fov_xy["y"])
-            
-            self.app.fov = self.app.fov * scale_factor
 
+            self.app.fov = self.app.fov * scale_factor
 
     def get_viewport(
         self, sky_or_pixel="sky", image_label=None
