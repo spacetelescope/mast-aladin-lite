@@ -20,22 +20,6 @@ def test_mast_aladin_has_aid(MastAladin_app):
     assert callable(getattr(MastAladin_app.aid, 'set_viewport', None))
 
 
-def test_sanity(MastAladin_app):
-    MastAladin_app
-    initial_fov_xy = {
-        'x': Angle(60, unit='deg'),
-        'y': Angle(30, unit='deg'),
-    }
-    MastAladin_app._fov_xy = initial_fov_xy
-
-    assert MastAladin_app._fov_xy == initial_fov_xy
-    print(MastAladin_app._fov_xy["x"])
-    print(MastAladin_app._fov_xy["y"])
-    MastAladin_app.aid.set_viewport(
-        fov=Angle(45, unit='deg')
-    )
-
-
 def test_mast_aladin_aid_set_viewport(MastAladin_app):
     # check that the default center coordinate is (0, 0) deg and the
     # fov is 60 deg before we test the setter. Set fov_xy to be able
@@ -44,7 +28,10 @@ def test_mast_aladin_aid_set_viewport(MastAladin_app):
         'x': Angle(60, unit='deg'),
         'y': Angle(40, unit='deg'),
     }
-    MastAladin_app._fov_xy = initial_fov_xy
+    MastAladin_app._fov_xy = {
+        'x': 60,
+        'y': 40,
+    }
     default_center = SkyCoord(0, 0, unit='deg')
     assert_coordinate_close(MastAladin_app.target, default_center)
     assert_angle_close(MastAladin_app.fov, initial_fov_xy["x"])
