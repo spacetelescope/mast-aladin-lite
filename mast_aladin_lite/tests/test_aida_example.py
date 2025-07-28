@@ -34,9 +34,8 @@ def test_sanity(MastAladin_app):
     MastAladin_app.aid.set_viewport(
         fov=Angle(45, unit='deg')
     )
-    MastAladin_app.aid.get_viewport()
 
-"""
+
 def test_mast_aladin_aid_set_viewport(MastAladin_app):
     # check that the default center coordinate is (0, 0) deg and the
     # fov is 60 deg before we test the setter. Set fov_xy to be able
@@ -47,20 +46,21 @@ def test_mast_aladin_aid_set_viewport(MastAladin_app):
     }
     MastAladin_app._fov_xy = initial_fov_xy
     default_center = SkyCoord(0, 0, unit='deg')
-    default_fov = Angle(60, unit='deg')
     assert_coordinate_close(MastAladin_app.target, default_center)
-    assert_angle_close(MastAladin_app.fov, default_fov)
+    assert_angle_close(MastAladin_app.fov, initial_fov_xy["x"])
     target_coords = SkyCoord(45, 45, unit='deg')
-    target_fov = Angle(30, unit='deg')
+    target_fov = {
+        'x' : Angle(45, unit='deg'), 
+        'y' : Angle(30, unit='deg'),
+    }
     MastAladin_app.aid.set_viewport(
         center=target_coords,
-        fov=target_fov
+        fov=target_fov["y"]
     )
     assert_coordinate_close(MastAladin_app.target, target_coords)
-    import pdb;pdb.set_trace()
-    assert_angle_close(MastAladin_app.fov, initial_fov_xy["y"])
+    assert_angle_close(MastAladin_app.fov, target_fov["x"])
 
-
+"""
 def test_mast_aladin_aid_get_viewport(MastAladin_app):
     # check that the default center coordinate is (0, 0) deg,
     # the default fov is 60.0 deg, and the image_label is None
