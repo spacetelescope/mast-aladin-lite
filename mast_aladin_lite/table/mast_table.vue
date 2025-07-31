@@ -99,7 +99,19 @@
       </v-container>
     </v-row>
     </v-container>
-  </div>
+
+    <div v-if="selected_rows.length > 0 && enable_load_in_app">
+      <v-col align="right">
+        <div>
+          <v-btn icon @click="open_selected_rows_in_jdaviz"><v-icon>mdi-open-in-app</v-icon></v-btn><v-label>jdaviz</v-label>
+        </div>
+        <div>
+          <v-btn icon @click="open_selected_rows_in_aladin"><v-icon>mdi-open-in-app</v-icon></v-btn><v-label>mast-aladin-lite</v-label>
+        </div>
+      </v-col>
+    </div>
+
+</div>
 </template>
 
 <script>
@@ -110,7 +122,9 @@ module.exports = {
       return this.headers_avail.filter(item => this.headers_visible.indexOf(item) !== -1);
     },
     headers_visible_sorted_description() {
-      return this.headers_visible_sorted.map(item => {return {'name': item, 'value': item, 'description': this.column_descriptions.find(entry => entry.name == item).description}});
+      return this.headers_visible_sorted.map(item => {
+        return {'name': item, 'value': item, 'description': this.column_descriptions.find(entry => entry.name == item).description}
+      });
     }
   },
   props: ['column_descriptions', 'show_tooltips'],
@@ -126,6 +140,7 @@ module.exports = {
 }
 .v-tooltip__content {
   opacity: 1 !important;
-  background-color: rgb(0, 97, 126);
-}
+  background-color: rgb(0, 97, 126) !important;
+  color: 'white' !important;
+ }
 </style>
