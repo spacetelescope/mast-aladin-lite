@@ -6,6 +6,7 @@ build:
     - graphviz
   tools:
     python: "3.11"
+    nodejs: "18"
   jobs:
     post_checkout:
       # Use `git log` to check if the latest commit contains "skip rtd" or "rtd skip",
