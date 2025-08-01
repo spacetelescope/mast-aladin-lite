@@ -1,7 +1,7 @@
 from functools import wraps
 
 
-def delay_until_render(function, attr='_wcs'):
+def delay_until_rendered(function, attr='_wcs'):
     """
     Delay a call on `function` until `attr` updates.
     """
@@ -27,8 +27,9 @@ def delay_until_render(function, attr='_wcs'):
         """
 
         # when the app is first constructed but not shown,
-        # `_wcs` is an empty dict, so `rendered` will be False.
-        # If `len(_wcs) > 0`, rendered will be True.
+        # the default attr `_wcs`` will be an empty dict,
+        # so `rendered` will be False. If `len(attr) > 0`,
+        # rendered will be True.
         rendered = bool(min(len(getattr(self, attr)), 1))
 
         def inner_func(change, rendered=rendered):
@@ -49,18 +50,30 @@ def delay_until_render(function, attr='_wcs'):
 
 class DelayUntilRendered:
 
-    @delay_until_render
+    @delay_until_rendered
     def delayed_add_fits(self, *args, **kwargs):
         self.add_fits(*args, **kwargs)
 
-    @delay_until_render
+    @delay_until_rendered
     def delayed_add_table(self, *args, **kwargs):
         self.add_table(*args, **kwargs)
 
-    @delay_until_render
+    @delay_until_rendered
     def delayed_add_graphic_overlay_from_stcs(self, *args, **kwargs):
         self.add_graphic_overlay_from_stcs(*args, **kwargs)
 
-    @delay_until_render
+    @delay_until_rendered
     def delayed_add_graphic_overlay_from_region(self, *args, **kwargs):
         self.add_graphic_overlay_from_region(*args, **kwargs)
+
+    @delay_until_rendered
+    def delayed_add_markers(self, *args, **kwargs):
+        self.add_markers(*args, **kwargs)
+
+    @delay_until_rendered
+    def delayed_add_catalog_from_URL(self, *args, **kwargs):
+        self.add_catalog_from_URL(*args, **kwargs)
+
+    @delay_until_rendered
+    def delayed_delayed_add_moc(self, *args, **kwargs):
+        self.add_moc(*args, **kwargs)
