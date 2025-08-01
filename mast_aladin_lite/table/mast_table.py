@@ -12,7 +12,12 @@ from astropy.coordinates import SkyCoord
 from astropy.table import Table
 
 from mast_aladin_lite.table import validate
+from astroquery.mast import MastMissions
 
+__all__ = [
+    'MastTable',
+    'get_current_table',
+]
 
 # register loaded table widgets as they're initialized
 _table_widgets = dict()
@@ -58,7 +63,8 @@ class MastTable(VuetifyTemplate):
     menu_open = Bool(False).tag(sync=True)
     clear_btn_lbl = Unicode('Clear Table').tag(sync=True)
     popout_button = Any().tag(sync=True, **widget_serialization)
-    enable_load_in_app = Bool(True).tag(sync=True)
+    enable_load_in_app = Bool(False).tag(sync=True)
+    mission = Unicode().tag(sync=True)
 
     # item_key is a column of the table with unique values
     # for each row, enabling selection of the row by lookup
@@ -101,9 +107,9 @@ class MastTable(VuetifyTemplate):
         self.app = app
 
         self.items = serialize(table)
-        mission = validate.detect_mission_or_products(table)
+        self.mission = validate.detect_mission_or_products(table)
         columns = table.colnames
-        self.column_descriptions = validate.get_column_descriptions(mission)
+        self.column_descriptions = validate.get_column_descriptions(self.mission)
 
         self._set_item_key(columns, unique_column)
 
@@ -188,8 +194,61 @@ class MastTable(VuetifyTemplate):
             func(msg)
 
     @property
-    def selected_table(self):
+    def selected_rows_table(self):
+        """
+        `~astropy.table.Table` of only the selected rows.
+        """
         return Table(self.selected_rows)
+
+    def vue_open_selected_rows_in_jdaviz(self, *args):
+        from jdaviz import Imviz
+        from jdaviz.configs.imviz.helper import _current_app as viz
+
+        if viz is None:
+            viz = Imviz()
+
+        with viz.batch_load():
+            for filename in self.selected_rows_table['filename']:
+                if filename in [data.label for data in viz.app.data_collection]:
+                    continue
+
+                # temporarily support JWST and HST until Roman is also available:
+                if filename.startswith('jw'):
+                    mission = 'jwst'
+                else:
+                    mission = 'hst'
+
+                MastMissions(mission=mission).download_file(filename)
+                viz.load_data(filename)
+
+        orientation = viz.plugins['Orientation']
+        orientation.align_by = 'WCS'
+        orientation.set_north_up_east_left()
+
+        plot_options = viz.plugins['Plot Options']
+        if len(plot_options.layer.choices) > 1:
+            for layer in plot_options.layer.choices:
+                plot_options.layer = layer
+                plot_options.image_color_mode = 'Color'
+
+            plot_options.apply_RGB_presets()
+
+        return viz
+
+    def vue_open_selected_rows_in_aladin(self, *args):
+        from mast_aladin_lite.app import gca
+
+        mal = gca()
+
+        for filename in self.selected_rows_table['filename']:
+            mal.delayed_add_fits(filename)
+
+        return mal
+
+    @observe('mission')
+    def _on_mission_update(self, msg={}):
+        if msg['new'] == 'list_products':
+            self.enable_load_in_app = True
 
 
 def get_current_table():
