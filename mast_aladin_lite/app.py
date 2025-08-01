@@ -49,6 +49,37 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         return table_widget
 
+    def vue_open_selected_rows_in_jdaviz(self, *args):
+        from jdaviz.configs.imviz.helper import _current_app as viz
+
+        with viz.batch_load():
+            for filename in self.table_selected['filename']:
+                if filename in [data.label for data in viz.app.data_collection]:
+                    continue
+
+                uri = f"mast:jwst/product/{filename}"
+                viz.load_data(uri, cache=True)
+
+        orientation = viz.plugins['Orientation']
+        orientation.align_by = 'WCS'
+        orientation.set_north_up_east_left()
+
+        plot_options = viz.plugins['Plot Options']
+
+        for layer in plot_options.layer.choices:
+            plot_options.layer = layer
+            plot_options.image_color_mode = 'One color per layer'
+            plot_options.image_bias = 0.3
+            plot_options.image_contrast = 1
+
+        plot_options.apply_RGB_presets()
+
+    def vue_open_selected_rows_in_aladin(self, *args):
+        from mast_aladin_lite.app import _latest_instantiated_app
+
+        for filename in self.table_selected['filename']:
+            _latest_instantiated_app.add_fits(filename)
+
 
 def gca():
     """
