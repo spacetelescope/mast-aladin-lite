@@ -80,7 +80,7 @@
       <template v-for="h in headers_visible_sorted_description" v-slot:[`header.${h.value}`]="{ header }">
         <div style="color: white;">
           <div v-if="show_tooltips">
-            <v-tooltip top>
+            <v-tooltip top class="mast-aladin-lite">
               <template v-slot:activator="{ on }">              
                 <span v-on="on"><strong>{{h.name}}</strong></span>
               </template>
@@ -99,7 +99,16 @@
       </v-container>
     </v-row>
     </v-container>
-  </div>
+
+    <div v-if="selected_rows.length > 0 && enable_load_in_app">
+      <v-col align="right">
+          <v-label>Open selected rows in:</v-label>
+          <v-btn @click="open_selected_rows_in_jdaviz"><v-label>jdaviz</v-label></v-btn>
+          <v-btn @click="open_selected_rows_in_aladin"><v-label>aladin</v-label></v-btn>
+
+      </v-col>
+    </div>
+</div>
 </template>
 
 <script>
@@ -110,7 +119,9 @@ module.exports = {
       return this.headers_avail.filter(item => this.headers_visible.indexOf(item) !== -1);
     },
     headers_visible_sorted_description() {
-      return this.headers_visible_sorted.map(item => {return {'name': item, 'value': item, 'description': this.column_descriptions.find(entry => entry.name == item).description}});
+      return this.headers_visible_sorted.map(item => {
+        return {'name': item, 'value': item, 'description': this.column_descriptions.find(entry => entry.name == item).description}
+      });
     }
   },
   props: ['column_descriptions', 'show_tooltips'],
@@ -126,6 +137,7 @@ module.exports = {
 }
 .v-tooltip__content {
   opacity: 1 !important;
-  background-color: rgb(0, 97, 126);
+  /* background-color: rgb(0, 97, 126) !important; */
+  color: 'white' !important;
 }
 </style>
