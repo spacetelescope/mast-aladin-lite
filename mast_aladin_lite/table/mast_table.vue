@@ -80,7 +80,7 @@
       <template v-for="h in headers_visible_sorted_description" v-slot:[`header.${h.value}`]="{ header }">
         <div style="color: white;">
           <div v-if="show_tooltips">
-            <v-tooltip top>
+            <v-tooltip top class="mast-aladin-lite">
               <template v-slot:activator="{ on }">              
                 <span v-on="on"><strong>{{h.name}}</strong></span>
               </template>
@@ -102,15 +102,12 @@
 
     <div v-if="selected_rows.length > 0 && enable_load_in_app">
       <v-col align="right">
-        <div>
-          <v-btn icon @click="open_selected_rows_in_jdaviz"><v-icon>mdi-open-in-app</v-icon></v-btn><v-label>jdaviz</v-label>
-        </div>
-        <div>
-          <v-btn icon @click="open_selected_rows_in_aladin"><v-icon>mdi-open-in-app</v-icon></v-btn><v-label>mast-aladin-lite</v-label>
-        </div>
+          <v-label>Open selected rows in:</v-label>
+          <v-btn @click="open_selected_rows_in_jdaviz"><v-label>jdaviz</v-label></v-btn>
+          <v-btn @click="open_selected_rows_in_aladin"><v-label>aladin</v-label></v-btn>
+
       </v-col>
     </div>
-
 </div>
 </template>
 
@@ -140,7 +137,7 @@ module.exports = {
 }
 .v-tooltip__content {
   opacity: 1 !important;
-  background-color: rgb(0, 97, 126) !important;
+  /* background-color: rgb(0, 97, 126) !important; */
   color: 'white' !important;
- }
+}
 </style>
