@@ -1,13 +1,14 @@
 from ipyaladin import Aladin
 from mast_aladin_lite.aida import AID
 from mast_aladin_lite.table import MastTable
+from mast_aladin_lite.mixins import DelayUntilRendered
 
 
 # store reference to the latest instantiation:
 _latest_instantiated_app = None
 
 
-class MastAladin(Aladin):
+class MastAladin(Aladin, DelayUntilRendered):
 
     def __init__(self, *args, **kwargs):
         # set ICRSd as the default visible coordinate system
