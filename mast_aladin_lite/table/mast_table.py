@@ -58,6 +58,7 @@ class MastTable(VuetifyTemplate):
     menu_open = Bool(False).tag(sync=True)
     clear_btn_lbl = Unicode('Clear Table').tag(sync=True)
     popout_button = Any().tag(sync=True, **widget_serialization)
+    enable_load_in_app = Bool(True).tag(sync=True)
 
     # item_key is a column of the table with unique values
     # for each row, enabling selection of the row by lookup
@@ -185,37 +186,6 @@ class MastTable(VuetifyTemplate):
     def _on_row_selection(self, msg={}):
         for func in self.row_select_callbacks:
             func(msg)
-
-    def vue_open_selected_rows_in_jdaviz(self, *args):
-        from jdaviz.configs.imviz.helper import _current_app as viz
-
-        with viz.batch_load():
-            for filename in self.table_selected['filename']:
-                if filename in [data.label for data in viz.app.data_collection]:
-                    continue
-
-                uri = f"mast:jwst/product/{filename}"
-                viz.load_data(uri, cache=True)
-
-        orientation = viz.plugins['Orientation']
-        orientation.align_by = 'WCS'
-        orientation.set_north_up_east_left()
-
-        plot_options = viz.plugins['Plot Options']
-
-        for layer in plot_options.layer.choices:
-            plot_options.layer = layer
-            plot_options.image_color_mode = 'One color per layer'
-            plot_options.image_bias = 0.3
-            plot_options.image_contrast = 1
-
-        plot_options.apply_RGB_presets()
-
-    def vue_open_selected_rows_in_aladin(self, *args):
-        from mast_aladin_lite.app import _latest_instantiated_app
-
-        for filename in self.table_selected['filename']:
-            _latest_instantiated_app.add_fits(filename)
 
     @property
     def selected_table(self):
