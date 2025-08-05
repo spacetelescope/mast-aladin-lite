@@ -28,7 +28,8 @@ class AID:
         center : `~astropy.coordinates.SkyCoord`
             Center the viewer on this coordinate.
         fov : `~astropy.coordinates.Angle` or float
-            Set the width of the viewport to span `field_of_view`.
+            Set the length of the viewport's smaller axis to span `fov`, as an
+            `~astropy.coordinates.Angle` or as a float in units of degrees.
 
         Raises
         ------
@@ -51,22 +52,21 @@ class AID:
                 fov = fov.value
 
             elif isinstance(fov, (float, int)):
-                if fov < 1:
-                    scale_factor = fov
+                if 0 < fov < 1:
+                    fov = Angle(fov, u.deg)
 
             else:
                 raise ValueError(
                     f"`fov` must be an `~astropy.coordinates.Angle` or float, got {fov=}"
                 )
 
-            current_fov = self.app.fov.value
-            aspect_ratio = float(self.app._fov_xy["y"]/self.app._fov_xy["x"])
+            current_fov = self.app.fov.to_value(u.deg)
+            aspect_ratio = float(self.app._fov_xy["y"] / self.app._fov_xy["x"])
 
-            if scale_factor == 0:
-                if aspect_ratio > 1:
-                    scale_factor = float(fov / current_fov)
-                else:
-                    scale_factor = float(fov / self.app._fov_xy["y"])
+            if aspect_ratio > 1:
+                scale_factor = float(fov / current_fov)
+            else:
+                scale_factor = float(fov / self.app._fov_xy["y"])
 
             self.app.fov = self.app.fov * scale_factor
 
