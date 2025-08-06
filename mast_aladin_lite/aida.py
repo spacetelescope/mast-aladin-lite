@@ -51,11 +51,7 @@ class AID:
             if isinstance(fov, (u.Quantity, Angle)):
                 fov = fov.value
 
-            elif isinstance(fov, (float, int)):
-                if 0 < fov < 1:
-                    fov = Angle(fov, u.deg)
-
-            else:
+            elif not isinstance(fov, (float, int)):
                 raise ValueError(
                     f"`fov` must be an `~astropy.coordinates.Angle` or float, got {fov=}"
                 )
