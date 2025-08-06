@@ -59,6 +59,8 @@ class AID:
             current_fov = self.app.fov.to_value(u.deg)
             aspect_ratio = float(self.app._fov_xy["y"] / self.app._fov_xy["x"])
 
+            # Determine the scale factor by which we want to adjust setting the
+            # ipyaladin horizontal fov
             if aspect_ratio > 1:
                 scale_factor = float(fov / current_fov)
             else:
