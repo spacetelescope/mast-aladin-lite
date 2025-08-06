@@ -47,9 +47,8 @@ class AID:
             self.app.target = center
 
         if fov is not None:
-            scale_factor = 0
             if isinstance(fov, (u.Quantity, Angle)):
-                fov = fov.value
+                fov = fov.to_value(u.deg)
 
             elif not isinstance(fov, (float, int)):
                 raise ValueError(
@@ -91,7 +90,7 @@ class AID:
             - center : `~astropy.coordinates.SkyCoord`
                 Center the viewer on this coordinate.
             - fov : `~astropy.coordinates.Angle`
-                An object representing the field of view of the shorter axis.
+                The length of the shorter viewport axis.
             - image_label: None
                 A string representing the label of the image, always `None`
                 for aladin-lite.
@@ -116,7 +115,7 @@ class AID:
                 "the concept of labels. `image_label` must be set to `None`."
             )
 
-        aspect_ratio = float(self.app._fov_xy["y"]/self.app._fov_xy["x"])
+        aspect_ratio = float(self.app._fov_xy["y"] / self.app._fov_xy["x"])
         if aspect_ratio > 1:
             current_fov = self.app._fov_xy["x"]
         else:
