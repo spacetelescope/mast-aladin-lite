@@ -11,6 +11,7 @@ except ImportError:
     ConfigHelper = None
 
 opened_sidecars = []
+default_height = 500
 
 
 def is_jdaviz(app):
@@ -28,7 +29,7 @@ def is_aladin(app):
     return isinstance(app, Aladin)
 
 
-class sidecar:
+class AppSidecar:
     loaded_apps = []
     _sidecar_context = None
 
@@ -42,7 +43,7 @@ class sidecar:
         include_aladin=False,
         include_jdaviz=False,
         close_existing=True,
-        height=500,
+        height=default_height,
     ):
 
         """
@@ -121,7 +122,7 @@ class sidecar:
 
         except ImportError:
             warnings.warn(
-                "`sidecar` would open jdaviz, but it is not installed. To install it, "
+                "`AppSidecar` found that jdaviz was not installed. To install it, "
                 "run `pip install jdaviz`.",
                 UserWarning
             )
@@ -172,7 +173,7 @@ class sidecar:
         Close this particular `sidecar` instance.
         """
         # close jdaviz apps within the sidecar:
-        for app in sidecar.loaded_apps:
+        for app in self.loaded_apps:
             if is_jdaviz(app):
                 app.app.close()
 
@@ -190,7 +191,7 @@ class sidecar:
             sidecar.close()
 
     @staticmethod
-    def resize_all(height=400):
+    def resize_all(height=default_height):
         """
         Resize all opened sidecars with ``height`` in pixels.
         """
@@ -218,8 +219,8 @@ def set_app_height(app, height):
             app.height = -1
         elif isinstance(height, int):
             app.height = height
-        else:
-            warnings.warn(
-                f"height could not be set for unrecognized app: {app}",
-                UserWarning
-            )
+    else:
+        warnings.warn(
+            f"height could not be set for unrecognized app: {app}",
+            UserWarning
+        )

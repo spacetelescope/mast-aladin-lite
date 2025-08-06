@@ -4,4 +4,4 @@
 # Top-level API as exposed to users.
 from mast_aladin_lite.app import MastAladin, gca  # noqa: F401
 from mast_aladin_lite.table import MastTable  # noqa: F401
-from mast_aladin_lite.sidecar import sidecar  # noqa: F401
+from mast_aladin_lite.app_sidecar import AppSidecar  # noqa: F401
