@@ -5,11 +5,27 @@ from sidecar import Sidecar as UpstreamSidecar
 
 from mast_aladin_lite.app import MastAladin, gca
 
-__all__ = [
-    'sidecar'
-]
+try:
+    from jdaviz.core.helpers import ConfigHelper
+except ImportError:
+    ConfigHelper = None
 
 opened_sidecars = []
+
+
+def is_jdaviz(app):
+    """
+    If jdaviz can be imported, check app is instanace of ConfigHelper;
+    otherwise you can't have a jdaviz app:
+    """
+    if ConfigHelper is not None:
+        return isinstance(app, ConfigHelper)
+
+    return False
+
+
+def is_aladin(app):
+    return isinstance(app, Aladin)
 
 
 class sidecar:
@@ -23,9 +39,10 @@ class sidecar:
         anchor='split-bottom',
         use_current_apps=False,
         title='mast-aladin-lite & jdaviz',
-        include_aladin=True,
-        include_jdaviz=True,
+        include_aladin=False,
+        include_jdaviz=False,
         close_existing=True,
+        height=500,
     ):
 
         """
@@ -51,12 +68,12 @@ class sidecar:
             Title to appear in the tab label for the sidecar in
             jupyterlab.
 
-        include_aladin : bool, optional (default is `True`)
+        include_aladin : bool, optional (default is `False`)
             The sidecar must include at least one
             mast-aladin-lite instance. If none are already
             available, a new one will be created.
 
-        include_jdaviz : bool, optional (default is `True`)
+        include_jdaviz : bool, optional (default is `False`)
             The sidecar must include at least one
             jdaviz instance. If none are already available,
             a new one will be created.
@@ -77,7 +94,12 @@ class sidecar:
             cls.close_all()
 
         apps = list(apps)
-        mal_instances = [app for app in apps if isinstance(app, Aladin)]
+
+        if not len(apps):
+            # if no apps are given, include one of each:
+            include_jdaviz = include_aladin = True
+
+        mal_instances = [app for app in apps if is_aladin(app)]
         jdaviz_instances = []
 
         if not len(mal_instances) and include_aladin:
@@ -87,10 +109,9 @@ class sidecar:
             apps.append(mal)
 
         try:
-            from jdaviz.core.helpers import ConfigHelper
             from jdaviz.configs.imviz.helper import Imviz, _current_app as viz
 
-            jdaviz_instances = [app for app in apps if isinstance(app, ConfigHelper)]
+            jdaviz_instances = [app for app in apps if is_jdaviz(app)]
 
             # construct new imviz if not using current app or no current app exists:
             if not len(jdaviz_instances) and include_jdaviz:
@@ -114,25 +135,32 @@ class sidecar:
 
         @solara.component
         def SidecarContents(n_columns=n_columns):
-            # create layout with `n_columns` equal width columns
-            with solara.Columns(n_columns * [1], gutters_dense=True):
+            style = f"height={height} !important;"
 
+            with solara.Columns(n_columns * [1], gutters_dense=True) as main:
                 for app in apps:
-                    if isinstance(app, Aladin):
+
+                    if is_aladin(app):
                         # MastAladin:
-                        with solara.Column():
-                            app.height = 600
+                        with solara.Column(gap='0px', style=style):
                             solara.display(app)
-                    elif app.__class__.__name__.endswith('viz'):
+
+                    elif is_jdaviz(app):
                         # jdaviz:
-                        with solara.Column():
+                        with solara.Column(gap='0px', style=style):
                             solara.display(app.app)
+
                     else:
                         # other:
-                        with solara.Column():
+                        with solara.Column(gap='0px'):
                             solara.display(app)
 
+                    set_app_height(app, height)
+
+            return main
+
         self._sidecar_context = UpstreamSidecar(anchor=anchor, title=title)
+        self._sidecar_context.layout.height = "100% !important;"
         with self._sidecar_context:
             solara.display(SidecarContents())
 
@@ -145,7 +173,7 @@ class sidecar:
         """
         # close jdaviz apps within the sidecar:
         for app in sidecar.loaded_apps:
-            if app.__class__.__name__.endswith('viz'):
+            if is_jdaviz(app):
                 app.app.close()
 
         # now close sidecar(s):
@@ -160,3 +188,38 @@ class sidecar:
         while len(opened_sidecars):
             sidecar = opened_sidecars.pop()
             sidecar.close()
+
+    @staticmethod
+    def resize_all(height=400):
+        """
+        Resize all opened sidecars with ``height`` in pixels.
+        """
+        for sc in opened_sidecars:
+            for app in sc.loaded_apps:
+                set_app_height(app, height)
+
+
+def set_app_height(app, height):
+    """
+    For an app instance ``app``, set the app height to be
+    ``height`` pixels. ``height`` may be an integer in units
+    of pixels, or "100%".
+    """
+    if is_jdaviz(app):
+        if isinstance(height, int):
+            height = f"{height}px"
+
+        app.app.layout.height = height
+        app.app.layout.resize = 'both'
+        app.app.state.settings['context']['notebook']['max_height'] = height
+
+    elif is_aladin(app):
+        if height == '100%':
+            app.height = -1
+        elif isinstance(height, int):
+            app.height = height
+        else:
+            warnings.warn(
+                f"height could not be set for unrecognized app: {app}",
+                UserWarning
+            )
