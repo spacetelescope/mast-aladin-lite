@@ -36,14 +36,20 @@ def delay_until_rendered(function, attr='_wcs'):
             # if the app is not rendered:
 
             if not rendered:
-                # On first render, unobserve the traitlet, then call function
+                # we reach this block on first render. now that
+                # the widget is available, unobserve the traitlet, and
+                # call the delayed function
                 rendered = True
+
                 self.unobserve(inner_func, attr)
                 return function(self, *args, **kwargs)
 
-        # on construction and before render, observe the traitlet
         if not rendered:
+            # on construction and before render, observe the traitlet
             self.observe(inner_func, attr)
+        else:
+            # if already rendered, run the function:
+            function(self, *args, **kwargs)
 
     return wrapper
 
