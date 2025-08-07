@@ -17,7 +17,7 @@ class AID:
     def __init__(self, mast_aladin):
         self.app = mast_aladin
 
-    def set_viewport(self, center=None, fov=None):
+    def set_viewport(self, center=None, fov=None, rotation=None):
         """
         Sets the viewport based on provided parameters.
         Presently, centers the viewer on a particular point, `center`,
@@ -30,11 +30,18 @@ class AID:
         fov : `~astropy.coordinates.Angle` or float
             Set the length of the viewport's smaller axis to span `fov`, as an
             `~astropy.coordinates.Angle` or as a float in units of degrees.
+        rotation : `~astropy.coordinates.Angle`, float
+            Set the angle between "+y" or "up" in the viewport and north in
+            degrees east of north (counter-clockwise). It can be set with
+            an `~astropy.coordinates.Angle` or floats interpreted
+            as angles in units of degrees.
 
         Raises
         ------
         TypeError
-            Given coordinates are not provided as SkyCoord.
+            - Given coordinates are not provided as SkyCoord.
+            - Given fov is not provided as Angle or float.
+            - Given rotation is not provided as Angle or float.
 
         """
 
@@ -51,7 +58,7 @@ class AID:
                 fov = fov.to_value(u.deg)
 
             elif not isinstance(fov, (float, int)):
-                raise ValueError(
+                raise TypeError(
                     f"`fov` must be an `~astropy.coordinates.Angle` or float, got {fov=}"
                 )
 
@@ -67,11 +74,19 @@ class AID:
 
             self.app.fov = self.app.fov * scale_factor
 
+        if rotation is not None:
+            if not isinstance(rotation, Angle) and not isinstance(rotation, float):
+                raise TypeError(
+                    "`rotation` must be an `~astropy.coordinates.Angle` or float."
+                )
+
+            self.app.rotation = rotation
+
     def get_viewport(
         self, sky_or_pixel="sky", image_label=None
     ):
         """
-        Gets the viewport center and field of view.
+        Gets the viewport center, field of view, and rotation.
 
         Parameters
         ----------
@@ -91,6 +106,8 @@ class AID:
                 Center the viewer on this coordinate.
             - fov : `~astropy.coordinates.Angle`
                 The length of the shorter viewport axis.
+            - rotation : `~astropy.coordinates.Angle`
+                Angle of the view center to north pole angle in degrees.
             - image_label: None
                 A string representing the label of the image, always `None`
                 for aladin-lite.
@@ -98,8 +115,8 @@ class AID:
         Raises
         ------
         NotImplementedError
-            Given `sky_or_pixel` is not "sky" or `None`.
-            Given `image_label` is not `None`.
+            - Given `sky_or_pixel` is not "sky" or `None`.
+            - Given `image_label` is not `None`.
 
         """
 
@@ -124,6 +141,7 @@ class AID:
         viewport_state = dict(
             center=self.app.target,
             fov=current_fov,
+            rotation=self.app.rotation,
             image_label=None
         )
 
