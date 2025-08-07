@@ -50,8 +50,8 @@ def test_mast_aladin_aid_set_viewport(MastAladin_app):
     }
     MastAladin_app.aid.set_viewport(
         center=target_coords,
+        fov=target_fov["y"],
         rotation=target_rotation,
-        fov=target_fov["y"]
     )
 
     assert_coordinate_close(MastAladin_app.target, target_coords)
