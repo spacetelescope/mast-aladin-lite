@@ -98,16 +98,16 @@
       </div>
       </v-container>
     </v-row>
-    </v-container>
-
     <div v-if="selected_rows.length > 0 && enable_load_in_app">
+      <v-row>
       <v-col align="right">
-          <v-label>Open selected rows in:</v-label>
-          <v-btn @click="open_selected_rows_in_jdaviz"><v-label>jdaviz</v-label></v-btn>
+          <v-label>Open products in:</v-label>
           <v-btn @click="open_selected_rows_in_aladin"><v-label>aladin</v-label></v-btn>
-
+          <v-btn @click="open_selected_rows_in_jdaviz"><v-label>jdaviz</v-label></v-btn>
       </v-col>
+      </v-row>
     </div>
+    </v-container>
 </div>
 </template>
 

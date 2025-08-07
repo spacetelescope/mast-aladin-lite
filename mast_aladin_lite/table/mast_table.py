@@ -255,5 +255,6 @@ def get_current_table():
     """
     Return the last instantiated table widget.
     """
-    latest_table_index = list(_table_widgets.keys())[-1]
-    return _table_widgets[latest_table_index]
+    if len(_table_widgets):
+        latest_table_index = list(_table_widgets.keys())[-1]
+        return _table_widgets[latest_table_index]
