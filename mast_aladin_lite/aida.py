@@ -73,7 +73,7 @@ class AID:
                 scale_factor = fov / self.app._fov_xy["y"]
 
             self.app.fov = self.app.fov * scale_factor
-        
+
         if rotation is not None:
             if not isinstance(rotation, Angle) and not isinstance(rotation, float):
                 raise TypeError(

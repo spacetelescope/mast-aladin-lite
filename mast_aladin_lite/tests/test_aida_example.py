@@ -21,10 +21,8 @@ def test_mast_aladin_has_aid(MastAladin_app):
 
 
 def test_mast_aladin_aid_set_viewport(MastAladin_app):
-    # check that the default center coordinate is (0, 0) deg and
-    # the default rotation angle is 0 deg
-    # check that the default center coordinate is (0, 0) deg, the 
-    # default rotation angle is 0 deg, and the fov is 60 deg before
+    # check that the default center coordinate is (0, 0) deg, the default
+    # fov is 60 deg, and the default rotation angle is 0 deg before
     # we test the setter. Set fov_xy to be able to check manipulations:
     initial_fov_xy = {
         'x': Angle(60, unit='deg'),
@@ -39,8 +37,7 @@ def test_mast_aladin_aid_set_viewport(MastAladin_app):
     assert_coordinate_close(MastAladin_app.target, default_center)
     assert_angle_close(MastAladin_app.rotation, default_rotation)
     assert_angle_close(MastAladin_app.fov, initial_fov_xy["x"])
-    
-    
+
     # test the setter for center and rotation
     target_coords = SkyCoord(45, 45, unit='deg')
     target_rotation = Angle(45, unit='deg')
