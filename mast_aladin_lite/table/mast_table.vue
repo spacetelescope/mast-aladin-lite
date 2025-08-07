@@ -80,7 +80,7 @@
       <template v-for="h in headers_visible_sorted_description" v-slot:[`header.${h.value}`]="{ header }">
         <div style="color: white;">
           <div v-if="show_tooltips">
-            <v-tooltip top class="mast-aladin-lite">
+            <v-tooltip top>
               <template v-slot:activator="{ on }">              
                 <span v-on="on"><strong>{{h.name}}</strong></span>
               </template>
@@ -137,7 +137,5 @@ module.exports = {
 }
 .v-tooltip__content {
   opacity: 1 !important;
-  /* background-color: rgb(0, 97, 126) !important; */
-  color: 'white' !important;
 }
 </style>
