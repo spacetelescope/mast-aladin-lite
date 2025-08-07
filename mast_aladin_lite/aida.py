@@ -61,9 +61,9 @@ class AID:
             # Determine the scale factor by which we want to adjust setting the
             # ipyaladin horizontal fov
             if aspect_ratio > 1:
-                scale_factor = float(fov / current_fov)
+                scale_factor = fov / current_fov
             else:
-                scale_factor = float(fov / self.app._fov_xy["y"])
+                scale_factor = fov / self.app._fov_xy["y"]
 
             self.app.fov = self.app.fov * scale_factor
 
