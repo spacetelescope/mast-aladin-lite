@@ -57,6 +57,7 @@ class MastAladin(Aladin, DelayUntilRendered):
 def gca():
     """
     Get the current mast-aladin-lite application instance.
+    If none exist, create a new one.
 
     Returns
     -------

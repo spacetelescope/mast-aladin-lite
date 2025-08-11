@@ -111,14 +111,19 @@ def update_mast_column_lists(update_column_descriptions=True, update_unique_colu
             )
 
         column_names = column_list['name'].tolist()
-        columns_available[mission] = set(column_names)
+        columns_available[mission] = set(sorted(column_names))
 
-    columns_available['list_products'] = set(col['name'] for col in list_products)
-    column_descriptions['list_products'] = list_products
+    columns_available['list_products'] = set(sorted(col['name'] for col in list_products))
+    column_descriptions['list_products'] = sorted(list_products, key=lambda x: x['name'])
 
     if update_column_descriptions:
-        json_file = open(column_descriptions_path, 'w')
-        json.dump(column_descriptions, json_file, indent=4)
+        with open(column_descriptions_path, 'w') as json_file:
+            json.dump(
+                column_descriptions,
+                json_file,
+                indent=4,
+                sort_keys=True
+            )
 
     compare_to_missions = missions + ['list_products']
 
@@ -137,8 +142,13 @@ def update_mast_column_lists(update_column_descriptions=True, update_unique_colu
         )
 
     if update_unique_columns:
-        json_file = open(unique_column_path, 'w')
-        json.dump(unique_columns, json_file, indent=4)
+        with open(unique_column_path, 'w') as json_file:
+            json.dump(
+                unique_columns,
+                json_file,
+                indent=4,
+                sort_keys=True
+            )
 
     return unique_columns, column_descriptions
 

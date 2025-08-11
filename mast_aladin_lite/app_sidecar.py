@@ -219,9 +219,11 @@ def set_app_height(app, height):
             app.height = -1
         elif isinstance(height, int):
             app.height = height
+
     elif isinstance(app, MastTable):
         if isinstance(height, int):
             height = f"{height}px"
+
         app.layout.height = height
 
     else:
