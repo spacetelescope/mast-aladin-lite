@@ -1,4 +1,5 @@
 
+import os
 import warnings
 
 from traitlets import List, Unicode, Bool, Int, Any, observe
@@ -209,16 +210,7 @@ class MastTable(VuetifyTemplate):
 
         with viz.batch_load():
             for filename in self.selected_rows_table['filename']:
-                if filename in [data.label for data in viz.app.data_collection]:
-                    continue
-
-                # temporarily support JWST and HST until Roman is also available:
-                if filename.startswith('jw'):
-                    mission = 'jwst'
-                else:
-                    mission = 'hst'
-
-                MastMissions(mission=mission).download_file(filename)
+                _download_from_mast(filename)
                 viz.load_data(filename)
 
         orientation = viz.plugins['Orientation']
@@ -241,6 +233,7 @@ class MastTable(VuetifyTemplate):
         mal = gca()
 
         for filename in self.selected_rows_table['filename']:
+            _download_from_mast(filename)
             mal.delayed_add_fits(filename)
 
         return mal
@@ -251,10 +244,27 @@ class MastTable(VuetifyTemplate):
             self.enable_load_in_app = True
 
 
+def _download_from_mast(product_file_name):
+    if os.path.exists(product_file_name):
+        # support load from cache without query to MM
+        return
+
+    # temporarily support JWST and HST until Roman is also available:
+    if product_file_name.startswith('jw'):
+        mission = 'jwst'
+    else:
+        mission = 'hst'
+
+    MastMissions(mission=mission).download_file(product_file_name)
+
+
 def get_current_table():
     """
-    Return the last instantiated table widget.
+    Return the last instantiated table widget, create a new
+    one if none exist.
     """
     if len(_table_widgets):
         latest_table_index = list(_table_widgets.keys())[-1]
         return _table_widgets[latest_table_index]
+
+    return MastTable()
