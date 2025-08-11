@@ -98,8 +98,17 @@
       </div>
       </v-container>
     </v-row>
+    <div v-if="selected_rows.length > 0 && enable_load_in_app">
+      <v-row>
+      <v-col align="right">
+          <v-label>Open products in:</v-label>
+          <v-btn @click="open_selected_rows_in_aladin"><v-label>aladin</v-label></v-btn>
+          <v-btn @click="open_selected_rows_in_jdaviz"><v-label>jdaviz</v-label></v-btn>
+      </v-col>
+      </v-row>
+    </div>
     </v-container>
-  </div>
+</div>
 </template>
 
 <script>
@@ -110,7 +119,9 @@ module.exports = {
       return this.headers_avail.filter(item => this.headers_visible.indexOf(item) !== -1);
     },
     headers_visible_sorted_description() {
-      return this.headers_visible_sorted.map(item => {return {'name': item, 'value': item, 'description': this.column_descriptions.find(entry => entry.name == item).description}});
+      return this.headers_visible_sorted.map(item => {
+        return {'name': item, 'value': item, 'description': this.column_descriptions.find(entry => entry.name == item).description}
+      });
     }
   },
   props: ['column_descriptions', 'show_tooltips'],
@@ -126,6 +137,5 @@ module.exports = {
 }
 .v-tooltip__content {
   opacity: 1 !important;
-  background-color: rgb(0, 97, 126);
 }
 </style>

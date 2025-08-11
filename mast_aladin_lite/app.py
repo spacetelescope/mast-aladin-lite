@@ -3,6 +3,10 @@ from mast_aladin_lite.aida import AID
 from mast_aladin_lite.table import MastTable
 from mast_aladin_lite.mixins import DelayUntilRendered
 
+__all__ = [
+    'MastAladin',
+    'gca',
+]
 
 # store reference to the latest instantiation:
 _latest_instantiated_app = None
@@ -53,9 +57,13 @@ class MastAladin(Aladin, DelayUntilRendered):
 def gca():
     """
     Get the current mast-aladin-lite application instance.
+    If none exist, create a new one.
 
     Returns
     -------
     MastAladin
     """
+    if _latest_instantiated_app is None:
+        return MastAladin()
+
     return _latest_instantiated_app
