@@ -34,7 +34,7 @@ def test_overlayers_dict_add_graphic_overlay_from_stcs_iterables(
     mock_send = Mock()
     monkeypatch.setattr(MastAladin, "send", mock_send)
     mast_aladin.add_graphic_overlay_from_stcs(stcs_strings, name=test_name)
-    
+
     assert test_name in mast_aladin._overlays_dict
     assert mast_aladin._overlays_dict[test_name]["type"] == "overlay"
     regions_info = mock_send.call_args[0][0]["regions_infos"]

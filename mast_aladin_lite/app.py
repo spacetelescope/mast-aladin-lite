@@ -67,15 +67,15 @@ class MastAladin(Aladin, DelayUntilRendered):
                 )
 
         return table_widget
-    
+
     def make_unique_name(self, name):
         """Create a unique layer name.
-        
+
         Parameters
         ----------
         name : str
             The current name of the layer to be added to the widget.
-        
+
         Returns
         -------
         unique_name
@@ -89,21 +89,21 @@ class MastAladin(Aladin, DelayUntilRendered):
             i += 1
 
         return unique_name
-    
+
     def common_overlay_handling(self, overlay_options, default_name):
         """Handles common functionality across added overlay methods
-        
+
         Parameters
         ----------
         overlay_options : dict
             The dictionary of overlay options for the layer being added to the widget.
         default_name : str
             The default name of the overlay being added.
-        
+
         Returns
         -------
         overlay_options
-            The updated dictionary of overlay options for the layer being added 
+            The updated dictionary of overlay options for the layer being added
             to the widget.
         """
         name = overlay_options.get("name", default_name)
@@ -118,7 +118,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             )
 
         return overlay_options
-    
+
     def add_markers(
         self, markers, **catalog_options
     ):
@@ -163,12 +163,11 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         super().add_catalog_from_URL(votable_URL, votable_options)
 
-
     def add_table(
         self,
         table,
         *,
-        shape = "cross",
+        shape="cross",
         **table_options,
     ):
         """Wraps add_table in ipyaladin to add overlay handling.
@@ -213,7 +212,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             "options": table_options,
         }
         shape = table_options.pop("shape", None)
-        super().add_table(table, shape = shape, **table_options)
+        super().add_table(table, shape=shape, **table_options)
 
     def add_graphic_overlay_from_region(
         self,
@@ -263,7 +262,7 @@ class MastAladin(Aladin, DelayUntilRendered):
         }
 
         super().add_graphic_overlay_from_region(region, **graphic_options)
-    
+
     def add_graphic_overlay_from_stcs(
         self, stc_string, **overlay_options
     ):
@@ -311,6 +310,7 @@ class MastAladin(Aladin, DelayUntilRendered):
                 )
 
             self._overlays_dict.pop(name)
+
 
 def gca():
     """
