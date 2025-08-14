@@ -3,6 +3,23 @@ from mast_aladin_lite.aida import AID
 from mast_aladin_lite.table import MastTable
 from mast_aladin_lite.mixins import DelayUntilRendered
 
+import warnings
+import io
+from ipyaladin.elements.error_shape import (
+    CircleError,
+    EllipseError,
+    _error_radius_conversion_factor,
+)
+
+try:
+    from regions import (
+        Region,
+        Regions,
+    )
+except ImportError:
+    Region = None
+    Regions = None
+
 
 # store reference to the latest instantiation:
 _latest_instantiated_app = None
@@ -23,6 +40,8 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         global _latest_instantiated_app
         _latest_instantiated_app = self
+
+        self._overlays_dict = {}
 
     def load_table(
         self,
@@ -48,7 +67,250 @@ class MastAladin(Aladin, DelayUntilRendered):
                 )
 
         return table_widget
+    
+    def make_unique_name(self, name):
+        """Create a unique layer name.
+        
+        Parameters
+        ----------
+        name : str
+            The current name of the layer to be added to the widget.
+        
+        Returns
+        -------
+        unique_name
+            A string that is a unique name for the layer being added.
+        """
+        unique_name = name
+        i = 1
 
+        while unique_name in self._overlays_dict:
+            unique_name = f"{name}_{i}"
+            i += 1
+
+        return unique_name
+    
+    def common_overlay_handling(self, overlay_options, default_name):
+        """Handles common functionality across added overlay methods
+        
+        Parameters
+        ----------
+        overlay_options : dict
+            The dictionary of overlay options for the layer being added to the widget.
+        default_name : str
+            The default name of the overlay being added.
+        
+        Returns
+        -------
+        overlay_options
+            The updated dictionary of overlay options for the layer being added 
+            to the widget.
+        """
+        name = overlay_options.get("name", default_name)
+        unique_name = self.make_unique_name(name=name)
+        overlay_options["name"] = unique_name
+
+        if unique_name != name:
+            warnings.warn(
+                f"Overlayer name `{name}` is already in use. Name `{unique_name}` "
+                "will be used instead.",
+                stacklevel=2,
+            )
+
+        return overlay_options
+    
+    def add_markers(
+        self, markers, **catalog_options
+    ):
+        """Wraps add_markers in ipyaladin to add overlay handling.
+
+        See ipyaladin for definitions of parameters.
+        """
+        if not isinstance(markers, list):
+            markers = [markers]
+
+        catalog_options = self.common_overlay_handling(
+            catalog_options, "catalog_python"
+        )
+
+        self._overlays_dict[catalog_options["name"]] = {
+            "type": "marker",
+            "markers": [marker.__dict__ for marker in markers],
+            "options": catalog_options,
+        }
+
+        super().add_markers(markers, **catalog_options)
+
+    def add_catalog_from_URL(
+        self, votable_URL, votable_options
+    ):
+        """Wraps add_catalog_from_URL in ipyaladin to add overlay handling.
+
+        See ipyaladin for definitions of parameters.
+        """
+        if votable_options is None:
+            votable_options = {}
+
+        votable_options = self.common_overlay_handling(
+            votable_options, "catalog_python"
+        )
+
+        self._overlays_dict[votable_options["name"]] = {
+            "type": "catalog",
+            "votable_URL": votable_URL,
+            "options": votable_options,
+        }
+
+        super().add_catalog_from_URL(votable_URL, votable_options)
+
+
+    def add_table(
+        self,
+        table,
+        *,
+        shape = "cross",
+        **table_options,
+    ):
+        """Wraps add_table in ipyaladin to add overlay handling.
+
+        See ipyaladin for definitions of parameters.
+        """
+        if isinstance(shape, CircleError):
+            table_options["circle_error"] = {
+                "radius": shape.radius,
+                "conversion_radius": _error_radius_conversion_factor(
+                    table[shape.radius].unit, shape.probability_threshold
+                ),
+            }
+            table_options["shape"] = shape.default_shape
+        elif isinstance(shape, EllipseError):
+            table_options["ellipse_error"] = {
+                "maj_axis": shape.maj_axis,
+                "min_axis": shape.min_axis,
+                "angle": shape.angle,
+                "conversion_angle": _error_radius_conversion_factor(
+                    table[shape.angle].unit
+                ),
+                "conversion_maj_axis": _error_radius_conversion_factor(
+                    table[shape.maj_axis].unit, shape.probability_threshold
+                ),
+                "conversion_min_axis": _error_radius_conversion_factor(
+                    table[shape.min_axis].unit, shape.probability_threshold
+                ),
+            }
+            table_options["shape"] = shape.default_shape
+        else:
+            table_options["shape"] = shape
+        table_bytes = io.BytesIO()
+        table.write(table_bytes, format="votable")
+
+        table_options = self.common_overlay_handling(
+            table_options, "catalog_python"
+        )
+
+        self._overlays_dict[table_options["name"]] = {
+            "type": "table",
+            "options": table_options,
+        }
+        shape = table_options.pop("shape", None)
+        super().add_table(table, shape = shape, **table_options)
+
+    def add_graphic_overlay_from_region(
+        self,
+        region,
+        **graphic_options,
+    ):
+        """Wraps add_graphic_overlay_from_region in ipyaladin to add overlay handling.
+
+        See ipyaladin for definitions of parameters.
+        """
+        if Region is None:
+            raise ModuleNotFoundError(
+                "To read regions objects, you need to install the regions library with "
+                "'pip install regions'."
+            )
+
+        # Check if the region is a list of regions or a single
+        # Region and convert it to a list of Regions
+        if isinstance(region, Regions):
+            region_list = region.regions
+        elif not isinstance(region, list):
+            region_list = [region]
+        else:
+            region_list = region
+
+        regions_infos = []
+        for region_element in region_list:
+            if not isinstance(region_element, Region):
+                raise ValueError(
+                    "region must a `~regions` object or a list of `~regions` objects. "
+                    "See the documentation for the supported region types."
+                )
+
+            from ipyaladin.utils._region_converter import RegionInfos
+
+            # Define behavior for each region type
+            regions_infos.append(RegionInfos(region_element).to_clean_dict())
+
+        graphic_options = self.common_overlay_handling(
+            graphic_options, "overlay_python"
+        )
+
+        self._overlays_dict[graphic_options["name"]] = {
+            "type": "overlay",
+            "regions_infos": regions_infos,
+            "options": graphic_options,
+        }
+
+        super().add_graphic_overlay_from_region(region, **graphic_options)
+    
+    def add_graphic_overlay_from_stcs(
+        self, stc_string, **overlay_options
+    ):
+        """Wraps add_graphic_overlay_from_stcs in ipyaladin to add overlay handling.
+
+        See ipyaladin for definitions of parameters.
+        """
+        overlay_options = self.common_overlay_handling(
+            overlay_options, "overlay_python"
+        )
+
+        region_list = [stc_string] if isinstance(stc_string, str) else stc_string
+        regions_infos = [
+            {
+                "region_type": "stcs",
+                "infos": {"stcs": region_element},
+                "options": overlay_options,
+            }
+            for region_element in region_list
+        ]
+
+        self._overlays_dict[overlay_options["name"]] = {
+            "type": "overlay",
+            "regions_infos": regions_infos,
+            "options": overlay_options,
+        }
+
+        super().add_graphic_overlay_from_stcs(stc_string, **overlay_options)
+
+    def remove_overlay(self, overlay_name):
+        """Wraps remove_overlay in ipyaladin to add overlay handling.
+
+        See ipyaladin for definitions of parameters.
+        """
+        overlay_names = (
+            [overlay_name] if isinstance(overlay_name, str) else overlay_name
+        )
+
+        super().remove_overlay(overlay_names)
+
+        for name in overlay_names:
+            if name not in self._overlays_dict:
+                raise ValueError(
+                    f"Cannot remove overlayer `{name}` since this layer does not exist."
+                )
+
+            self._overlays_dict.pop(name)
 
 def gca():
     """
