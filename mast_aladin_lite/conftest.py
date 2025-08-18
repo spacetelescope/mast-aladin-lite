@@ -11,6 +11,10 @@ def MastAladin_app():
 
 
 @pytest.fixture
+def imviz_helper():
+    return Imviz()
+  
+@pytest.fixture
 def mast_observation_table():
     """
     To reproduce the table file, run:
