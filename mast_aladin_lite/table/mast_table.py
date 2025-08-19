@@ -1,8 +1,6 @@
 
 import os
-import json
 import warnings
-from collections import defaultdict
 
 from traitlets import List, Unicode, Bool, Int, Any, observe
 from ipypopout import PopoutButton
@@ -12,13 +10,15 @@ from ipywidgets.widgets import widget_serialization
 import numpy as np
 import astropy.units as u
 from astropy.coordinates import SkyCoord
+from astropy.table import Table
 
+from mast_aladin_lite.table import validate
+from astroquery.mast import MastMissions
 
-# locations for metadata from MissionMAST:
-missions = ['jwst', 'roman', 'hst']
-table_data_dir = os.path.join(os.path.dirname(__file__), 'data')
-unique_column_path = os.path.join(table_data_dir, 'unique_columns_per_mission.json')
-column_descriptions_path = os.path.join(table_data_dir, 'column_descriptions.json')
+__all__ = [
+    'MastTable',
+    'get_current_table',
+]
 
 # register loaded table widgets as they're initialized
 _table_widgets = dict()
@@ -64,6 +64,8 @@ class MastTable(VuetifyTemplate):
     menu_open = Bool(False).tag(sync=True)
     clear_btn_lbl = Unicode('Clear Table').tag(sync=True)
     popout_button = Any().tag(sync=True, **widget_serialization)
+    enable_load_in_app = Bool(False).tag(sync=True)
+    mission = Unicode().tag(sync=True)
 
     # item_key is a column of the table with unique values
     # for each row, enabling selection of the row by lookup
@@ -106,9 +108,9 @@ class MastTable(VuetifyTemplate):
         self.app = app
 
         self.items = serialize(table)
-        mission = detect_mission(table)
+        self.mission = validate.detect_mission_or_products(table)
         columns = table.colnames
-        self.column_descriptions = get_column_descriptions(mission)
+        self.column_descriptions = validate.get_column_descriptions(self.mission)
 
         self._set_item_key(columns, unique_column)
 
@@ -192,80 +194,77 @@ class MastTable(VuetifyTemplate):
         for func in self.row_select_callbacks:
             func(msg)
 
+    @property
+    def selected_rows_table(self):
+        """
+        `~astropy.table.Table` of only the selected rows.
+        """
+        return Table(self.selected_rows)
+
+    def vue_open_selected_rows_in_jdaviz(self, *args):
+        from jdaviz import Imviz
+        from jdaviz.configs.imviz.helper import _current_app as viz
+
+        if viz is None:
+            viz = Imviz()
+
+        with viz.batch_load():
+            for filename in self.selected_rows_table['filename']:
+                _download_from_mast(filename)
+                viz.load_data(filename)
+
+        orientation = viz.plugins['Orientation']
+        orientation.align_by = 'WCS'
+        orientation.set_north_up_east_left()
+
+        plot_options = viz.plugins['Plot Options']
+        if len(plot_options.layer.choices) > 1:
+            for layer in plot_options.layer.choices:
+                plot_options.layer = layer
+                plot_options.image_color_mode = 'Color'
+
+            plot_options.apply_RGB_presets()
+
+        return viz
+
+    def vue_open_selected_rows_in_aladin(self, *args):
+        from mast_aladin_lite.app import gca
+
+        mal = gca()
+
+        for filename in self.selected_rows_table['filename']:
+            _download_from_mast(filename)
+            mal.delayed_add_fits(filename)
+
+        return mal
+
+    @observe('mission')
+    def _on_mission_update(self, msg={}):
+        if msg['new'] == 'list_products':
+            self.enable_load_in_app = True
+
+
+def _download_from_mast(product_file_name):
+    if os.path.exists(product_file_name):
+        # support load from cache without query to MM
+        return
+
+    # temporarily support JWST and HST until Roman is also available:
+    if product_file_name.startswith('jw'):
+        mission = 'jwst'
+    else:
+        mission = 'hst'
+
+    MastMissions(mission=mission).download_file(product_file_name)
+
 
 def get_current_table():
     """
-    Return the last instantiated table widget.
+    Return the last instantiated table widget, create a new
+    one if none exist.
     """
-    latest_table_index = list(_table_widgets.keys())[-1]
-    return _table_widgets[latest_table_index]
+    if len(_table_widgets):
+        latest_table_index = list(_table_widgets.keys())[-1]
+        return _table_widgets[latest_table_index]
 
-
-def update_mast_column_lists(update_column_descriptions=True, update_unique_columns=True):
-    """
-    Return a dictionary of columns in observation query
-    results from astroqery.mast.missions.MastMissions
-    that are unique to each mission.
-    """
-    from astroquery.mast.missions import MastMissions
-
-    mast = MastMissions()
-
-    columns_available = dict()
-    unique_columns = dict()
-    column_descriptions = defaultdict(list)
-
-    for mission in missions:
-        mast.mission = mission
-        column_list = mast.get_column_list()
-
-        for row in column_list.iterrows():
-            column_descriptions[mission].append(
-                {k: str(v).strip() for k, v in zip(column_list.colnames, row)}
-            )
-
-        column_names = column_list['name'].tolist()
-        columns_available[mission] = set(column_names)
-
-    if update_column_descriptions:
-        json_file = open(column_descriptions_path, 'w')
-        json.dump(column_descriptions, json_file)
-
-    for mission in missions:
-        mast.mission = mission
-        column_names = mast.get_column_list()['name']
-
-        other_missions = list(missions)
-        other_missions.remove(mission)
-        other_mission_columns = columns_available[other_missions[0]].union(
-            columns_available[other_missions[1]]
-        )
-        unique_columns[mission] = list(
-            columns_available[mission].difference(
-                other_mission_columns
-            )
-        )
-
-    if update_unique_columns:
-        json_file = open(unique_column_path, 'w')
-        json.dump(unique_columns, json_file, indent=4)
-
-    return unique_columns
-
-
-def detect_mission(table):
-    """
-    Detect which mission was queried by the results from an astroquery.mast.missions
-    query by looking for unique columns in the `astropy.table.Table`.
-    """
-    unique_columns = json.load(open(unique_column_path, 'r'))
-    columns = table.colnames
-
-    for mission in missions:
-        if any(name in unique_columns[mission] for name in columns):
-            return mission
-
-
-def get_column_descriptions(mission):
-    column_descriptions = json.load(open(column_descriptions_path, 'r'))
-    return column_descriptions[mission]
+    return MastTable()

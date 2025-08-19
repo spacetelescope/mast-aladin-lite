@@ -4,6 +4,7 @@ from ipyaladin import Aladin
 from sidecar import Sidecar as UpstreamSidecar
 
 from mast_aladin_lite.app import MastAladin, gca
+from mast_aladin_lite.table import MastTable
 
 try:
     from jdaviz.core.helpers import ConfigHelper
@@ -211,7 +212,6 @@ def set_app_height(app, height):
             height = f"{height}px"
 
         app.app.layout.height = height
-        app.app.layout.resize = 'both'
         app.app.state.settings['context']['notebook']['max_height'] = height
 
     elif is_aladin(app):
@@ -219,6 +219,13 @@ def set_app_height(app, height):
             app.height = -1
         elif isinstance(height, int):
             app.height = height
+
+    elif isinstance(app, MastTable):
+        if isinstance(height, int):
+            height = f"{height}px"
+
+        app.layout.height = height
+
     else:
         warnings.warn(
             f"height could not be set for unrecognized app: {app}",
