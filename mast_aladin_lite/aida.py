@@ -55,8 +55,8 @@ class AID:
             )
 
         if isinstance(rotation, (u.Quantity, Angle)):
-            rotation = rotation.to_value(u.deg)        
-        
+            rotation = rotation.to_value(u.deg)
+
         self.app.rotation = rotation
 
     def set_viewport(self, center=None, fov=None, rotation=None, image_label=None, **kwargs):

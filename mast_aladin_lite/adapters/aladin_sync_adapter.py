@@ -1,7 +1,3 @@
-import astropy.units as u
-import numpy as np
-
-from astropy.coordinates import SkyCoord
 from IPython.display import display
 from mast_aladin_lite.app import gca
 

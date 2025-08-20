@@ -1,8 +1,5 @@
 from abc import ABC, abstractmethod
 
-from astropy.coordinates import SkyCoord
-from astropy.wcs import WCS
-
 
 class ViewerSyncAdapter(ABC):
     @abstractmethod
