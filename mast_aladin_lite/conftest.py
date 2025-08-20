@@ -29,8 +29,3 @@ def mast_observation_table():
         os.path.dirname(__file__), "tests", "data", "mm_jwst_M4.ecsv"
     )
     return Table.read(path)
-
-@pytest.fixture
-def imviz_helper():
-    return Imviz()
-
