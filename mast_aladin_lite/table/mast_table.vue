@@ -78,7 +78,7 @@
         class="elevation-2"
       >
       <template v-for="h in headers_visible_sorted_description" v-slot:[`header.${h.value}`]="{ header }">
-        <div style="color: white;">
+        <div>
           <div v-if="show_tooltips">
             <v-tooltip top>
               <template v-slot:activator="{ on }">              
@@ -130,12 +130,24 @@ module.exports = {
 
 
 <style scoped>
-.table-component {
-  thead {
-      background-color: rgb(0, 97, 126); /* MAST button background lighter-blue color */
-    }
+:root {
+  color-scheme: light dark;
 }
 .v-tooltip__content {
   opacity: 1 !important;
+}
+:where(.vuetify-styles) .v-data-table .v-data-table-header, .v-data-footer {
+  background-color: light-dark(#B4DBE8, rgb(0, 97, 126)) !important;  /* MAST background for light mode */
+  .v-data-table-header__icon.mdi {
+      hover {
+        color: rgba(0, 0, 0, 0.38) !important;
+      }
+      active {
+        color: light-dark(black, white) !important;
+      }
+  }
+  th {
+    color: light-dark(black, white) !important;
+  }
 }
 </style>
