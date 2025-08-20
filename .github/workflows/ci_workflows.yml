@@ -53,7 +53,7 @@ jobs:
           - name: macOS - Python 3.11
             os: macos-latest
             python: '3.11'
-            toxenv: py310-test
+            toxenv: py311-test
             allow_failure: false
 
           - name: Windows - Python 3.11
