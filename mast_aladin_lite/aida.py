@@ -49,6 +49,11 @@ class AID:
         if rotation is None:
             return
 
+        if not isinstance(rotation, (Angle)) and not isinstance(rotation, float):
+            raise TypeError(
+                "`rotation` must be an `~astropy.coordinates.Angle` or float."
+            )
+
         if isinstance(rotation, (u.Quantity, Angle)):
             rotation = rotation.to_value(u.deg)        
         
@@ -85,14 +90,6 @@ class AID:
         self._set_center(center)
         self._set_fov(fov)
         self._set_rotation(rotation)
-
-        if rotation is not None:
-            if not isinstance(rotation, Angle) and not isinstance(rotation, float):
-                raise TypeError(
-                    "`rotation` must be an `~astropy.coordinates.Angle` or float."
-                )
-
-            self.app.rotation = rotation
 
     def get_viewport(
         self, sky_or_pixel="sky", image_label=None
@@ -147,7 +144,7 @@ class AID:
         viewport_state = dict(
             center=self.app.target,
             fov=min(self.app.fov_xy),
-            rotation=self.app.rotation.value,
+            rotation=self.app.rotation,
             image_label=None
         )
 
