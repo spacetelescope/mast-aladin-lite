@@ -166,6 +166,7 @@ class MastAladin(Aladin, DelayUntilRendered):
         overlay_info = self._overlays_dict.add_overlay(
             {
                 "type": "table",
+                "table": table,
                 "options": table_options,
             }
         )

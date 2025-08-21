@@ -142,6 +142,7 @@ def test_overlays_dict_add_table(monkeypatch):
 
     assert test_name in mast_aladin._overlays_dict
     assert mast_aladin._overlays_dict[test_name]["type"] == "table"
+    assert all(mast_aladin._overlays_dict[test_name]["table"] == table)
 
     # circle error
     # test handling for an overlay with existing name
@@ -164,6 +165,7 @@ def test_overlays_dict_add_table(monkeypatch):
 
     assert test_name + "_1" in mast_aladin._overlays_dict
     assert mast_aladin._overlays_dict[test_name + "_1"]["type"] == "table"
+    assert all(mast_aladin._overlays_dict[test_name + "_1"]["table"] == table)
     assert mast_aladin._overlays_dict[test_name + "_1"]["options"]["color"] == "pink"
     assert "circle_error" in mast_aladin._overlays_dict[test_name + "_1"]["options"]
 
@@ -182,6 +184,7 @@ def test_overlays_dict_add_table(monkeypatch):
 
     assert "catalog_python" in mast_aladin._overlays_dict
     assert mast_aladin._overlays_dict["catalog_python"]["type"] == "table"
+    assert all(mast_aladin._overlays_dict["catalog_python"]["table"] == table)
 
     # test removing these overlays, resetting for next functionality check
     mast_aladin.remove_overlay([test_name, test_name + "_1", "catalog_python"])
