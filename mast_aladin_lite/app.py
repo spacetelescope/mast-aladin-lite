@@ -81,7 +81,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             catalog_options, "catalog_python"
         )
 
-        self._overlays_dict.add_overlay(
+        overlay_info = self._overlays_dict.add_overlay(
             {
                 "type": "marker",
                 "markers": [marker.__dict__ for marker in markers],
@@ -90,6 +90,8 @@ class MastAladin(Aladin, DelayUntilRendered):
         )
 
         super().add_markers(markers, **catalog_options)
+
+        return overlay_info
 
     def add_catalog_from_URL(
         self, votable_URL, votable_options
@@ -105,7 +107,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             votable_options, "catalog_python"
         )
 
-        self._overlays_dict.add_overlay(
+        overlay_info = self._overlays_dict.add_overlay(
             {
                 "type": "catalog",
                 "votable_URL": votable_URL,
@@ -114,6 +116,8 @@ class MastAladin(Aladin, DelayUntilRendered):
         )
 
         super().add_catalog_from_URL(votable_URL, votable_options)
+
+        return overlay_info
 
     def add_table(
         self,
@@ -159,14 +163,17 @@ class MastAladin(Aladin, DelayUntilRendered):
             table_options, "catalog_python"
         )
 
-        self._overlays_dict.add_overlay(
+        overlay_info = self._overlays_dict.add_overlay(
             {
                 "type": "table",
                 "options": table_options,
             }
         )
         shape = table_options.pop("shape", None)
+
         super().add_table(table, shape=shape, **table_options)
+
+        return overlay_info
 
     def add_graphic_overlay_from_region(
         self,
@@ -209,7 +216,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             graphic_options, "overlay_python"
         )
 
-        self._overlays_dict.add_overlay(
+        overlay_info = self._overlays_dict.add_overlay(
             {
                 "type": "overlay",
                 "regions_infos": regions_infos,
@@ -218,6 +225,8 @@ class MastAladin(Aladin, DelayUntilRendered):
         )
 
         super().add_graphic_overlay_from_region(region, **graphic_options)
+
+        return overlay_info
 
     def add_graphic_overlay_from_stcs(
         self, stc_string, **overlay_options
@@ -241,7 +250,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             for region_element in region_list
         ]
 
-        self._overlays_dict.add_overlay(
+        overlay_info = self._overlays_dict.add_overlay(
             {
                 "type": "overlay",
                 "regions_infos": regions_infos,
@@ -250,6 +259,8 @@ class MastAladin(Aladin, DelayUntilRendered):
         )
 
         super().add_graphic_overlay_from_stcs(stc_string, **overlay_options)
+
+        return overlay_info
 
     def remove_overlay(self, overlay_name):
         """Wraps remove_overlay in ipyaladin to add overlay handling.
