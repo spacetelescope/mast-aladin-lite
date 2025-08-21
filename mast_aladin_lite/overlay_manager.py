@@ -17,10 +17,10 @@ class OverlayManager:
 
     def items(self):
         return self._overlays_dict.items()
-    
+
     def pop(self, key):
         self._overlays_dict.pop(key)
-    
+
     def keys(self):
         return self._overlays_dict.keys()
 
@@ -74,10 +74,10 @@ class OverlayManager:
             )
 
         return overlay_options
-    
+
     def add_overlay(self, overlay_info):
         """Add overlay to overlay dictionary.
-        
+
         Parameters
         ----------
         overlay_info : dict

@@ -36,7 +36,7 @@ def test_overlays_dict_add_markers(
                 ),
             )
         )
-    options = {"name":test_name, "color":"pink", "shape":"cross", "source_size":15}
+    options = {"name": test_name, "color": "pink", "shape": "cross", "source_size": 15}
 
     mast_aladin.add_markers(markers, name=test_name, color="pink", shape="cross", source_size=15)
 
@@ -48,7 +48,13 @@ def test_overlays_dict_add_markers(
 
     # test handling for a catalog with existing name
     with warnings.catch_warnings(record=True) as w:
-        mast_aladin.add_markers(markers, name=test_name, color="pink", shape="cross", source_size=15)
+        mast_aladin.add_markers(
+            markers,
+            name=test_name,
+            color="pink",
+            shape="cross",
+            source_size=15
+        )
         assert len(w) == 1
         assert test_name + "_1" in str(w[-1].message)
 
@@ -86,7 +92,7 @@ def test_overlays_dict_add_catalog_from_URL(
         "https://vizier.unistra.fr/viz-bin/votable?-source=HIP2&-c=LMC&-out.add=_RAJ,_"
         "DEJ&-oc.form=dm&-out.meta=DhuL&-out.max=9999&-c.rm=180"
     )
-    options = {"source_size": 12, "color": "#f08080", "on_click": "showTable", "name" : test_name}
+    options = {"source_size": 12, "color": "#f08080", "on_click": "showTable", "name": test_name}
     mast_aladin.add_catalog_from_URL(url, options)
 
     assert test_name in mast_aladin._overlays_dict
@@ -204,7 +210,7 @@ def test_overlays_dict_add_graphic_overlay_from_region(
     circle = CircleSkyRegion(
         center=center, radius=Angle(0.5, "deg"), visual={"edgecolor": "yellow"}
     )
-    mast_aladin.add_graphic_overlay_from_region([circle], name = test_name)
+    mast_aladin.add_graphic_overlay_from_region([circle], name=test_name)
 
     assert test_name in mast_aladin._overlays_dict
     assert mast_aladin._overlays_dict[test_name]["type"] == "overlay_region"
@@ -216,7 +222,7 @@ def test_overlays_dict_add_graphic_overlay_from_region(
 
     # test handling for an overlay with existing name
     with warnings.catch_warnings(record=True) as w:
-        mast_aladin.add_graphic_overlay_from_region([circle], name = test_name)
+        mast_aladin.add_graphic_overlay_from_region([circle], name=test_name)
         assert len(w) == 1
         assert test_name + "_1" in str(w[-1].message)
 
@@ -228,7 +234,6 @@ def test_overlays_dict_add_graphic_overlay_from_region(
     assert regions_info[0]["infos"]["dec"] == center.dec.to_value(u.deg)
     assert regions_info[0]["infos"]["radius"] == radius.to_value(u.deg)
 
-
     # test handling for overlay with no given name
     mast_aladin.add_graphic_overlay_from_region([circle])
 
@@ -239,7 +244,6 @@ def test_overlays_dict_add_graphic_overlay_from_region(
     assert regions_info[0]["infos"]["ra"] == center.ra.to_value(u.deg)
     assert regions_info[0]["infos"]["dec"] == center.dec.to_value(u.deg)
     assert regions_info[0]["infos"]["radius"] == radius.to_value(u.deg)
-
 
     # test removing these overlays, resetting for next functionality check
     mast_aladin.remove_overlay([test_name, test_name + "_1", "overlay_python"])
