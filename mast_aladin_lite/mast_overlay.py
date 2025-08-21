@@ -16,4 +16,5 @@ class MastOverlay(dict):
 
     @property
     def data(self):
-        return self
+        ignored = ["type", "options"]
+        return {key: value for key, value in self.items() if key not in ignored}
