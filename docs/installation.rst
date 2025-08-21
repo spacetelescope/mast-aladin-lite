@@ -10,8 +10,8 @@ User Installation
 
 Set Up Your Local Environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-To use mast-aladin-lite, you need `Python 3.10` or later. Below is an example using `Python 3.11`, but you can 
-replace 3.11 with any supported version (e.g., 3.10, 3.12).
+To use mast-aladin-lite, you need `Python 3.11` or later. Below is an example using `Python 3.11`, but you can 
+replace 3.11 with any supported version (e.g., 3.12).
 
 1. **Create a new Conda environment:**
 
