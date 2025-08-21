@@ -65,9 +65,7 @@
     </v-row>
     <v-row>
       <v-container fluid>
-      <div class="table-component" style="padding: 5px;">
       <v-data-table
-        dense
         :headers="headers_visible_sorted_description"
         :items="items"
         :item-key="item_key"
@@ -78,7 +76,6 @@
         class="elevation-2"
       >
       <template v-for="h in headers_visible_sorted_description" v-slot:[`header.${h.value}`]="{ header }">
-        <div>
           <div v-if="show_tooltips">
             <v-tooltip top>
               <template v-slot:activator="{ on }">              
@@ -92,10 +89,8 @@
           <div v-else>
               <span><strong>{{h.name}}</strong></span>
           </div>
-        </div>
       </template>
       </v-data-table>
-      </div>
       </v-container>
     </v-row>
     <div v-if="selected_rows.length > 0 && enable_load_in_app">
@@ -136,7 +131,7 @@ module.exports = {
 .v-tooltip__content {
   opacity: 1 !important;
 }
-:where(.vuetify-styles) .v-data-table .v-data-table-header, .v-data-footer {
+:where(.vuetify-styles) .v-data-table-header, .v-data-footer {
   background-color: light-dark(#B4DBE8, rgb(0, 97, 126)) !important;  /* MAST background for light mode */
   .v-data-table-header__icon.mdi {
       hover {
@@ -146,8 +141,16 @@ module.exports = {
         color: light-dark(black, white) !important;
       }
   }
-  th {
+  .sortable {
     color: light-dark(black, white) !important;
   }
 }
+.v-data-table {
+  tbody {
+    td {
+      text-wrap: nowrap !important;
+    }
+  }
+}
+
 </style>
