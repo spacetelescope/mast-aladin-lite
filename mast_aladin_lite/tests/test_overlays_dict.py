@@ -71,7 +71,7 @@ def test_overlays_dict_add_markers(
 
     # test removing these overlays, resetting for next functionality check
     mast_aladin.remove_overlay([test_name, test_name + "_1", "catalog_python"])
-    assert not mast_aladin._overlays_dict
+    assert not mast_aladin._overlays_dict.keys()
 
 
 def test_overlays_dict_add_catalog_from_URL(
@@ -124,7 +124,7 @@ def test_overlays_dict_add_catalog_from_URL(
 
     # test removing these overlays, resetting for next functionality check
     mast_aladin.remove_overlay([test_name, test_name + "_1", "catalog_python"])
-    assert not mast_aladin._overlays_dict
+    assert not mast_aladin._overlays_dict.keys()
 
 
 def test_overlays_dict_add_table(monkeypatch):
@@ -185,7 +185,7 @@ def test_overlays_dict_add_table(monkeypatch):
 
     # test removing these overlays, resetting for next functionality check
     mast_aladin.remove_overlay([test_name, test_name + "_1", "catalog_python"])
-    assert not mast_aladin._overlays_dict
+    assert not mast_aladin._overlays_dict.keys()
 
 
 def test_overlays_dict_add_graphic_overlay_from_region(
@@ -240,7 +240,7 @@ def test_overlays_dict_add_graphic_overlay_from_region(
 
     # test removing these overlays, resetting for next functionality check
     mast_aladin.remove_overlay([test_name, test_name + "_1", "overlay_python"])
-    assert not mast_aladin._overlays_dict
+    assert not mast_aladin._overlays_dict.keys()
 
 
 test_stcs_iterables = [
@@ -295,7 +295,7 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_(
 
     # test removing these overlays, resetting for next functionality check
     mast_aladin.remove_overlay([test_name, test_name + "_1", "overlay_python"])
-    assert not mast_aladin._overlays_dict
+    assert not mast_aladin._overlays_dict.keys()
 
 
 test_overlay_names = [
@@ -342,7 +342,7 @@ def test_remove_overlay(
         assert name_info == overlay_names
 
     # confirm each overlay was removed from the dict as expected
-    assert not mast_aladin._overlays_dict
+    assert not mast_aladin._overlays_dict.keys()
 
     # try removing non-existent layer to confirm error is raised
     with pytest.raises(

@@ -2,8 +2,7 @@ from ipyaladin import Aladin
 from mast_aladin_lite.aida import AID
 from mast_aladin_lite.table import MastTable
 from mast_aladin_lite.mixins import DelayUntilRendered
-
-import warnings
+from mast_aladin_lite.overlay_manager import OverlayManager
 import io
 from ipyaladin.elements.error_shape import (
     CircleError,
@@ -41,7 +40,7 @@ class MastAladin(Aladin, DelayUntilRendered):
         global _latest_instantiated_app
         _latest_instantiated_app = self
 
-        self._overlays_dict = {}
+        self._overlays_dict = OverlayManager()
 
     def load_table(
         self,
@@ -68,57 +67,6 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         return table_widget
 
-    def make_unique_name(self, name):
-        """Create a unique layer name.
-
-        Parameters
-        ----------
-        name : str
-            The current name of the layer to be added to the widget.
-
-        Returns
-        -------
-        unique_name
-            A string that is a unique name for the layer being added.
-        """
-        unique_name = name
-        i = 1
-
-        while unique_name in self._overlays_dict:
-            unique_name = f"{name}_{i}"
-            i += 1
-
-        return unique_name
-
-    def common_overlay_handling(self, overlay_options, default_name):
-        """Handles common functionality across added overlay methods
-
-        Parameters
-        ----------
-        overlay_options : dict
-            The dictionary of overlay options for the layer being added to the widget.
-        default_name : str
-            The default name of the overlay being added.
-
-        Returns
-        -------
-        overlay_options
-            The updated dictionary of overlay options for the layer being added
-            to the widget.
-        """
-        name = overlay_options.get("name", default_name)
-        unique_name = self.make_unique_name(name=name)
-        overlay_options["name"] = unique_name
-
-        if unique_name != name:
-            warnings.warn(
-                f"Overlayer name `{name}` is already in use. Name `{unique_name}` "
-                "will be used instead.",
-                stacklevel=2,
-            )
-
-        return overlay_options
-
     def add_markers(
         self, markers, **catalog_options
     ):
@@ -129,15 +77,17 @@ class MastAladin(Aladin, DelayUntilRendered):
         if not isinstance(markers, list):
             markers = [markers]
 
-        catalog_options = self.common_overlay_handling(
+        catalog_options = self._overlays_dict.common_overlay_handling(
             catalog_options, "catalog_python"
         )
 
-        self._overlays_dict[catalog_options["name"]] = {
-            "type": "marker",
-            "markers": [marker.__dict__ for marker in markers],
-            "options": catalog_options,
-        }
+        self._overlays_dict.add_overlay(
+            {
+                "type": "marker",
+                "markers": [marker.__dict__ for marker in markers],
+                "options": catalog_options,
+            }
+        )
 
         super().add_markers(markers, **catalog_options)
 
@@ -151,15 +101,17 @@ class MastAladin(Aladin, DelayUntilRendered):
         if votable_options is None:
             votable_options = {}
 
-        votable_options = self.common_overlay_handling(
+        votable_options = self._overlays_dict.common_overlay_handling(
             votable_options, "catalog_python"
         )
 
-        self._overlays_dict[votable_options["name"]] = {
-            "type": "catalog",
-            "votable_URL": votable_URL,
-            "options": votable_options,
-        }
+        self._overlays_dict.add_overlay(
+            {
+                "type": "catalog",
+                "votable_URL": votable_URL,
+                "options": votable_options,
+            }
+        )
 
         super().add_catalog_from_URL(votable_URL, votable_options)
 
@@ -203,14 +155,16 @@ class MastAladin(Aladin, DelayUntilRendered):
         table_bytes = io.BytesIO()
         table.write(table_bytes, format="votable")
 
-        table_options = self.common_overlay_handling(
+        table_options = self._overlays_dict.common_overlay_handling(
             table_options, "catalog_python"
         )
 
-        self._overlays_dict[table_options["name"]] = {
-            "type": "table",
-            "options": table_options,
-        }
+        self._overlays_dict.add_overlay(
+            {
+                "type": "table",
+                "options": table_options,
+            }
+        )
         shape = table_options.pop("shape", None)
         super().add_table(table, shape=shape, **table_options)
 
@@ -251,15 +205,17 @@ class MastAladin(Aladin, DelayUntilRendered):
             # Define behavior for each region type
             regions_infos.append(RegionInfos(region_element).to_clean_dict())
 
-        graphic_options = self.common_overlay_handling(
+        graphic_options = self._overlays_dict.common_overlay_handling(
             graphic_options, "overlay_python"
         )
 
-        self._overlays_dict[graphic_options["name"]] = {
-            "type": "overlay",
-            "regions_infos": regions_infos,
-            "options": graphic_options,
-        }
+        self._overlays_dict.add_overlay(
+            {
+                "type": "overlay",
+                "regions_infos": regions_infos,
+                "options": graphic_options,
+            }
+        )
 
         super().add_graphic_overlay_from_region(region, **graphic_options)
 
@@ -270,7 +226,8 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         See ipyaladin for definitions of parameters.
         """
-        overlay_options = self.common_overlay_handling(
+
+        overlay_options = self._overlays_dict.common_overlay_handling(
             overlay_options, "overlay_python"
         )
 
@@ -284,11 +241,13 @@ class MastAladin(Aladin, DelayUntilRendered):
             for region_element in region_list
         ]
 
-        self._overlays_dict[overlay_options["name"]] = {
-            "type": "overlay",
-            "regions_infos": regions_infos,
-            "options": overlay_options,
-        }
+        self._overlays_dict.add_overlay(
+            {
+                "type": "overlay",
+                "regions_infos": regions_infos,
+                "options": overlay_options,
+            }
+        )
 
         super().add_graphic_overlay_from_stcs(stc_string, **overlay_options)
 
