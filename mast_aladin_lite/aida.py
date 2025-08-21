@@ -49,9 +49,9 @@ class AID:
         if rotation is None:
             return
 
-        if not isinstance(rotation, (Angle)) and not isinstance(rotation, float):
+        if not isinstance(rotation, (u.Quantity, Angle, float)):
             raise TypeError(
-                "`rotation` must be an `~astropy.coordinates.Angle` or float."
+                f"`rotation` must be an `~astropy.units.Quantity`, `~astropy.coordinates.Angle` or float. Received {type(rotation)}"  # noqa:E501
             )
 
         if isinstance(rotation, (u.Quantity, Angle)):
