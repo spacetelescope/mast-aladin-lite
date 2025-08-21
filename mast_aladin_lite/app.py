@@ -218,7 +218,7 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         overlay_info = self._overlays_dict.add_overlay(
             {
-                "type": "overlay",
+                "type": "overlay_region",
                 "regions_infos": regions_infos,
                 "options": graphic_options,
             }
@@ -252,7 +252,7 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         overlay_info = self._overlays_dict.add_overlay(
             {
-                "type": "overlay",
+                "type": "overlay_stcs",
                 "regions_infos": regions_infos,
                 "options": overlay_options,
             }

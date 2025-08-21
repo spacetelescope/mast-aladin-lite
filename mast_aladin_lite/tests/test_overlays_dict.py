@@ -204,7 +204,7 @@ def test_overlays_dict_add_graphic_overlay_from_region(
     mast_aladin.add_graphic_overlay_from_region([circle], name = test_name)
 
     assert test_name in mast_aladin._overlays_dict
-    assert mast_aladin._overlays_dict[test_name]["type"] == "overlay"
+    assert mast_aladin._overlays_dict[test_name]["type"] == "overlay_region"
     regions_info = mock_send.call_args[0][0]["regions_infos"]
     assert regions_info == mast_aladin._overlays_dict[test_name]["regions_infos"]
     assert regions_info[0]["infos"]["ra"] == center.ra.to_value(u.deg)
@@ -218,7 +218,7 @@ def test_overlays_dict_add_graphic_overlay_from_region(
         assert test_name + "_1" in str(w[-1].message)
 
     assert test_name + "_1" in mast_aladin._overlays_dict
-    assert mast_aladin._overlays_dict[test_name + "_1"]["type"] == "overlay"
+    assert mast_aladin._overlays_dict[test_name + "_1"]["type"] == "overlay_region"
     regions_info = mock_send.call_args[0][0]["regions_infos"]
     assert regions_info == mast_aladin._overlays_dict[test_name + "_1"]["regions_infos"]
     assert regions_info[0]["infos"]["ra"] == center.ra.to_value(u.deg)
@@ -230,7 +230,7 @@ def test_overlays_dict_add_graphic_overlay_from_region(
     mast_aladin.add_graphic_overlay_from_region([circle])
 
     assert "overlay_python" in mast_aladin._overlays_dict
-    assert mast_aladin._overlays_dict["overlay_python"]["type"] == "overlay"
+    assert mast_aladin._overlays_dict["overlay_python"]["type"] == "overlay_region"
     regions_info = mock_send.call_args[0][0]["regions_infos"]
     assert regions_info == mast_aladin._overlays_dict["overlay_python"]["regions_infos"]
     assert regions_info[0]["infos"]["ra"] == center.ra.to_value(u.deg)
@@ -267,7 +267,7 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_(
     mast_aladin.add_graphic_overlay_from_stcs(stcs_strings, name=test_name)
 
     assert test_name in mast_aladin._overlays_dict
-    assert mast_aladin._overlays_dict[test_name]["type"] == "overlay"
+    assert mast_aladin._overlays_dict[test_name]["type"] == "overlay_stcs"
     regions_info = mock_send.call_args[0][0]["regions_infos"]
     assert regions_info == mast_aladin._overlays_dict[test_name]["regions_infos"]
     assert regions_info[0]["infos"]["stcs"] in stcs_strings
@@ -279,7 +279,7 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_(
         assert test_name + "_1" in str(w[-1].message)
 
     assert test_name + "_1" in mast_aladin._overlays_dict
-    assert mast_aladin._overlays_dict[test_name + "_1"]["type"] == "overlay"
+    assert mast_aladin._overlays_dict[test_name + "_1"]["type"] == "overlay_stcs"
     regions_info = mock_send.call_args[0][0]["regions_infos"]
     assert regions_info == mast_aladin._overlays_dict[test_name + "_1"]["regions_infos"]
     assert regions_info[0]["infos"]["stcs"] in stcs_strings
@@ -288,7 +288,7 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_(
     mast_aladin.add_graphic_overlay_from_stcs(stcs_strings)
 
     assert "overlay_python" in mast_aladin._overlays_dict
-    assert mast_aladin._overlays_dict["overlay_python"]["type"] == "overlay"
+    assert mast_aladin._overlays_dict["overlay_python"]["type"] == "overlay_stcs"
     regions_info = mock_send.call_args[0][0]["regions_infos"]
     assert regions_info == mast_aladin._overlays_dict["overlay_python"]["regions_infos"]
     assert regions_info[0]["infos"]["stcs"] in stcs_strings
