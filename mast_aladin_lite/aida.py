@@ -23,7 +23,7 @@ class AID:
 
         if not isinstance(center, SkyCoord):
             raise TypeError(
-                "`center` must be a SkyCoord object."
+                f"`center` must be a SkyCoord object. Received {center=}"
             )
 
         self.app.target = center
@@ -32,17 +32,17 @@ class AID:
         if fov is None:
             return
 
-        if isinstance(fov, (u.Quantity, Angle)):
-            fov = fov.to_value(u.deg)
+        if isinstance(fov, (float, int)):
+            fov = fov * u.deg
 
-        elif not isinstance(fov, (float, int)):
+        elif not isinstance(fov, (u.Quantity, Angle)):
             raise ValueError(
-                f"`fov` must be an `~astropy.coordinates.Angle` or float, got {fov=}"
+                f"`fov` must be an `~astropy.coordinates.Angle` or float. Received {fov=}"
             )
 
         # Determine the scale factor by which we want to adjust setting the
         # ipyaladin horizontal fov
-        scale_factor = fov / min(self.app.fov_xy).to_value(u.deg)
+        scale_factor = fov / min(self.app.fov_xy)
         self.app.fov = self.app.fov * scale_factor
 
     def _set_rotation(self, rotation=None):
@@ -51,7 +51,7 @@ class AID:
 
         if not isinstance(rotation, (u.Quantity, Angle, float)):
             raise TypeError(
-                f"`rotation` must be an `~astropy.units.Quantity`, `~astropy.coordinates.Angle` or float. Received {type(rotation)}"  # noqa:E501
+                f"`rotation` must be an `~astropy.coordinates.Angle` or float. Received {rotation=}"
             )
 
         if isinstance(rotation, (u.Quantity, Angle)):
@@ -59,7 +59,7 @@ class AID:
 
         self.app.rotation = rotation
 
-    def set_viewport(self, center=None, fov=None, rotation=None, image_label=None, **kwargs):
+    def set_viewport(self, center=None, fov=None, rotation=None, **kwargs):
         """
         Sets the viewport based on provided parameters.
         Presently, centers the viewer on a particular point, `center`,
