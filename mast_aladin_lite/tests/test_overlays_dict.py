@@ -4,8 +4,10 @@ import astropy.units as u
 import pytest
 from unittest.mock import Mock
 import warnings
+import re
 
 from mast_aladin_lite import MastAladin
+from mast_aladin_lite.mast_overlay import MastOverlay, MastOverlayType
 from ipyaladin.elements.error_shape import EllipseError, CircleError
 from regions import CircleSkyRegion
 from ipyaladin import Marker
@@ -304,36 +306,71 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_(
     mast_aladin.remove_overlay([test_name, test_name + "_1", "overlay_python"])
     assert not mast_aladin._overlays_dict.keys()
 
+def test_invalid_overlay_type(
+    monkeypatch,
+):
+    """Test proper error sent for adding invalid overlay type."""
 
-test_overlay_names = [
+    mock_send = Mock()
+    monkeypatch.setattr(MastAladin, "send", mock_send)
+
+    test_invalid_overlay = {
+        "type":"not_valid",
+        "options":{"name":"test_invalid"}
+    }
+
+    # try creating invalid layer to confirm error is raised
+    with pytest.raises(
+        ValueError,
+        match=re.escape("Invalid overlay type 'not_valid'. "
+        f"Must be one of {[t.value for t in MastOverlayType]}.")
+    ):
+        MastOverlay(test_invalid_overlay)
+
+test_marker_overlay = MastOverlay({
+    "type":"marker",
+    "options":{"name":"test_markers"}
+})
+
+test_catalog_overlay = MastOverlay({
+    "type":"catalog",
+    "options":{"name":"test_catalog"}
+})
+
+test_overlays = [
     "overlay",
+    test_marker_overlay,
     ["overlay", "overlay_1", "2MASS"],
     "catalog",
-    ["overlay_1", "2MASS"],
+    ["overlay_1", "2MASS", test_catalog_overlay],
 ]
 
-
-@pytest.mark.parametrize("overlay_names", test_overlay_names)
+@pytest.mark.parametrize("overlays", test_overlays)
 def test_remove_overlay(
     monkeypatch,
-    overlay_names,
+    overlays,
 ):
-    """Test proper messages sent for removing overlays using their name string(s).
+    """Test proper messages sent for removing overlays.
 
     Parameters
     ----------
-    overlay_names : Union[Iterable[str], str]
+    overlays : Union[Iterable[str, MastOverlay], str, MastOverlay]
         The name strings of overlays.
     """
     mock_send = Mock()
     monkeypatch.setattr(MastAladin, "send", mock_send)
 
     # generate expected overlays_dict to remove names from
-    if type(overlay_names) is str:
-        overlay_names_list = [overlay_names]
-    else:
-        overlay_names_list = overlay_names
-    mast_aladin._overlays_dict = {name: {} for name in overlay_names_list}
+    if isinstance(overlays, MastOverlay):
+        overlay_names = [overlays.name]
+    elif isinstance(overlays, str):
+        overlay_names = [overlays]
+    elif isinstance(overlays, (list, tuple)):
+        overlay_names = [
+            o.name if isinstance(o, MastOverlay) else o for o in overlays
+        ]
+
+    mast_aladin._overlays_dict = {name: {} for name in overlay_names}
 
     mast_aladin.remove_overlay(overlay_names)
 

@@ -3,6 +3,7 @@ from mast_aladin_lite.aida import AID
 from mast_aladin_lite.table import MastTable
 from mast_aladin_lite.mixins import DelayUntilRendered
 from mast_aladin_lite.overlay_manager import OverlayManager
+from mast_aladin_lite.mast_overlay import MastOverlay
 import io
 from ipyaladin.elements.error_shape import (
     CircleError,
@@ -263,14 +264,36 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         return overlay_info
 
-    def remove_overlay(self, overlay_name):
+    def remove_overlay(self, overlay):
         """Wraps remove_overlay in ipyaladin to add overlay handling.
 
-        See ipyaladin for definitions of parameters.
+        Parameters
+        ----------
+        overlay : str(s) or MastOverlay(s)
+            The overlay name (str) or MastOverlay object to be removed.
+
+        Raises
+        ------
+        TypeError
+            Overlays are not provided as MastOverlay or names.
+        ValueError
+            Overlay does not exist.
+
+        See ipyaladin for definitions of its parameters.
         """
-        overlay_names = (
-            [overlay_name] if isinstance(overlay_name, str) else overlay_name
-        )
+
+        if isinstance(overlay, MastOverlay):
+            overlay_names = [overlay.name]
+        elif isinstance(overlay, str):
+            overlay_names = [overlay]
+        elif isinstance(overlay, (list, tuple)):
+            overlay_names = [
+                o.name if isinstance(o, MastOverlay) else o for o in overlay
+            ]
+        else:
+            raise TypeError(
+                "overlay must be a str, MastOverlay, or iterable of these."
+            )
 
         super().remove_overlay(overlay_names)
 
