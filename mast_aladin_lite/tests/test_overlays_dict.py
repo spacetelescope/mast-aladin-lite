@@ -306,6 +306,7 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_(
     mast_aladin.remove_overlay([test_name, test_name + "_1", "overlay_python"])
     assert not mast_aladin._overlays_dict.keys()
 
+
 def test_invalid_overlay_type(
     monkeypatch,
 ):
@@ -315,27 +316,32 @@ def test_invalid_overlay_type(
     monkeypatch.setattr(MastAladin, "send", mock_send)
 
     test_invalid_overlay = {
-        "type":"not_valid",
-        "options":{"name":"test_invalid"}
+        "type": "not_valid",
+        "options": {"name": "test_invalid"}
     }
 
     # try creating invalid layer to confirm error is raised
     with pytest.raises(
         ValueError,
-        match=re.escape("Invalid overlay type 'not_valid'. "
-        f"Must be one of {[t.value for t in MastOverlayType]}.")
+        match=re.escape(
+            "Invalid overlay type 'not_valid'. "
+            f"Must be one of {[t.value for t in MastOverlayType]}."
+        )
     ):
         MastOverlay(test_invalid_overlay)
 
+
 test_marker_overlay = MastOverlay({
-    "type":"marker",
-    "options":{"name":"test_markers"}
+    "type": "marker",
+    "options": {"name": "test_markers"}
 })
 
+
 test_catalog_overlay = MastOverlay({
-    "type":"catalog",
-    "options":{"name":"test_catalog"}
+    "type": "catalog",
+    "options": {"name": "test_catalog"}
 })
+
 
 test_overlays = [
     "overlay",
@@ -344,6 +350,7 @@ test_overlays = [
     "catalog",
     ["overlay_1", "2MASS", test_catalog_overlay],
 ]
+
 
 @pytest.mark.parametrize("overlays", test_overlays)
 def test_remove_overlay(
