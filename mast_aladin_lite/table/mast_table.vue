@@ -61,33 +61,34 @@
     </v-card>
   </v-menu>
 
-  <div v-if="show_load_buttons">
-    <v-col class="d-flex justify-end">
-      <v-tooltip top>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          v-on="on"
-          :disabled="no_product_selected" 
-          class="open-in" 
-          @click="open_selected_rows_in_aladin"
-          ><v-icon>mdi-open-in-app</v-icon>aladin</v-btn>
-        </template>
-        <div style="text-align: center;"">Download, open selection<br />in mast-aladin-lite</div>
-      </v-tooltip>
 
-      <v-tooltip top>
-      <template v-slot:activator="{ on }">
-        <v-btn 
-          v-on="on"
-          :disabled="no_product_selected" 
-          class="open-in" 
-          @click="open_selected_rows_in_jdaviz"
-          ><v-icon>mdi-open-in-app</v-icon>jdaviz</v-btn>
-        </template>
-        <div style="text-align: center;"">Download, open <br />selection in jdaviz</div>
-      </v-tooltip>
-  </v-col>
+  <v-col class="d-flex justify-end">
+  <div v-if="show_load_buttons">
+    <v-tooltip top>
+    <template v-slot:activator="{ on }">
+      <v-btn
+        v-on="on"
+        :disabled="no_product_selected" 
+        class="open-in" 
+        @click="open_selected_rows_in_aladin"
+        ><v-icon>mdi-open-in-app</v-icon>aladin</v-btn>
+      </template>
+      <div style="text-align: center;"">Download, open selection<br />in mast-aladin-lite</div>
+    </v-tooltip>
+
+    <v-tooltip top>
+    <template v-slot:activator="{ on }">
+      <v-btn 
+        v-on="on"
+        :disabled="no_product_selected" 
+        class="open-in" 
+        @click="open_selected_rows_in_jdaviz"
+        ><v-icon>mdi-open-in-app</v-icon>jdaviz</v-btn>
+      </template>
+      <div style="text-align: center;"">Download, open <br />selection in jdaviz</div>
+    </v-tooltip>
 </div>
+</v-col>
 
 <v-container fluid>
     <v-data-table
