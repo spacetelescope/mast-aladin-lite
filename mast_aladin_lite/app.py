@@ -2,8 +2,8 @@ from ipyaladin import Aladin
 from mast_aladin_lite.aida import AID
 from mast_aladin_lite.table import MastTable
 from mast_aladin_lite.mixins import DelayUntilRendered
-from mast_aladin_lite.overlay_manager import OverlayManager
-from mast_aladin_lite.mast_overlay import MastOverlay
+from mast_aladin_lite.overlay.overlay_manager import OverlayManager
+from mast_aladin_lite.overlay.mast_overlay import MastOverlay
 import io
 from ipyaladin.elements.error_shape import (
     CircleError,

@@ -1,5 +1,5 @@
 import warnings
-from mast_aladin_lite.mast_overlay import MastOverlay
+from mast_aladin_lite.overlay.mast_overlay import MastOverlay
 
 
 class OverlayManager:
@@ -89,8 +89,9 @@ class OverlayManager:
         overlay_info
             The overlay options for the layer being added to the widget.
         """
-        self.__setitem__(overlay_info["options"]["name"], overlay_info)
 
         overlay_info = MastOverlay(overlay_info)
+
+        self[overlay_info["options"]["name"]] = overlay_info
 
         return overlay_info

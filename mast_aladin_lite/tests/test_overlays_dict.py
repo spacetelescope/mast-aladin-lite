@@ -7,7 +7,7 @@ import warnings
 import re
 
 from mast_aladin_lite import MastAladin
-from mast_aladin_lite.mast_overlay import MastOverlay, MastOverlayType
+from mast_aladin_lite.overlay.mast_overlay import MastOverlay, MastOverlayType
 from ipyaladin.elements.error_shape import EllipseError, CircleError
 from regions import CircleSkyRegion
 from ipyaladin import Marker
