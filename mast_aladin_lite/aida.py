@@ -59,7 +59,7 @@ class AID:
 
         self.app.rotation = rotation
 
-    def set_viewport(self, center=None, fov=None, rotation=None, **kwargs):
+    def set_viewport(self, center=None, fov=None, rotation=None, image_label=None, **kwargs):
         """
         Sets the viewport based on provided parameters.
         Presently, centers the viewer on a particular point, `center`,
@@ -77,6 +77,9 @@ class AID:
             degrees east of north (counter-clockwise). It can be set with
             an `~astropy.coordinates.Angle` or floats interpreted
             as angles in units of degrees.
+        image_label : str
+            Set the viewport with respect to the image
+            with the data label: ``image_label``.
 
         Raises
         ------
