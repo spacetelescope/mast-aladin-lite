@@ -90,6 +90,12 @@ class AID:
 
         """
 
+        if image_label is not None:
+            raise NotImplementedError(
+                "aladin-lite only shows one 'image' per viewer, and does not need"
+                "the concept of labels. `image_label` must be set to `None`."
+            )
+
         self._set_center(center)
         self._set_fov(fov)
         self._set_rotation(rotation)
