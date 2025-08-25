@@ -77,9 +77,10 @@ class AID:
             degrees east of north (counter-clockwise). It can be set with
             an `~astropy.coordinates.Angle` or floats interpreted
             as angles in units of degrees.
-        image_label : str
-            Set the viewport with respect to the image
-            with the data label: ``image_label``.
+        image_label : str, optional
+            `image_label` is a required argument for ``AID`` API compatibility,
+            but it is not relevant for HiPS browsers like aladin-lite. If not
+            `None`, an error will be raised.
 
         Raises
         ------
