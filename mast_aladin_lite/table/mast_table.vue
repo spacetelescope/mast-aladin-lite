@@ -61,32 +61,33 @@
     </v-card>
   </v-menu>
 
-  <v-col class="d-flex justify-end">
-    <v-tooltip top>
-    <template v-slot:activator="{ on }">
-      <v-btn
-        v-on="on"
-        :disabled="no_product_selected" 
-        class="open-in" 
-        @click="open_selected_rows_in_aladin"
-        ><v-icon>mdi-open-in-app</v-icon>aladin</v-btn>
-      </template>
-      <div style="text-align: center;"">Download, open selection<br />in mast-aladin-lite</div>
-    </v-tooltip>
+  <div v-if="show_load_buttons">
+    <v-col class="d-flex justify-end">
+      <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-on="on"
+          :disabled="no_product_selected" 
+          class="open-in" 
+          @click="open_selected_rows_in_aladin"
+          ><v-icon>mdi-open-in-app</v-icon>aladin</v-btn>
+        </template>
+        <div style="text-align: center;"">Download, open selection<br />in mast-aladin-lite</div>
+      </v-tooltip>
 
-    <v-tooltip top>
-    <template v-slot:activator="{ on }">
-      <v-btn 
-        v-on="on"
-        :disabled="no_product_selected" 
-        class="open-in" 
-        @click="open_selected_rows_in_jdaviz"
-        ><v-icon>mdi-open-in-app</v-icon>jdaviz</v-btn>
-      </template>
-      <div style="text-align: center;"">Download, open <br />selection in jdaviz</div>
-    </v-tooltip>
+      <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-btn 
+          v-on="on"
+          :disabled="no_product_selected" 
+          class="open-in" 
+          @click="open_selected_rows_in_jdaviz"
+          ><v-icon>mdi-open-in-app</v-icon>jdaviz</v-btn>
+        </template>
+        <div style="text-align: center;"">Download, open <br />selection in jdaviz</div>
+      </v-tooltip>
   </v-col>
-
+</div>
 
 <v-container fluid>
     <v-data-table
@@ -132,8 +133,11 @@ module.exports = {
       });
     },
     no_product_selected() {
-      return this.selected_rows.length == 0 || this.enable_load_in_app
+      return this.selected_rows.length == 0
     },
+    show_load_buttons() {
+      return this.mission == 'list_products' && this.enable_load_in_app
+    }
   },
   props: ['column_descriptions', 'show_tooltips'],
 };
