@@ -81,7 +81,7 @@ class AID:
         image_label : str, optional
             `image_label` is a required argument for ``AID`` API compatibility,
             but it is not relevant for HiPS browsers like aladin-lite. If not
-            `None`, an warning will be emitted 
+            `None`, an warning will be emitted
 
         Raises
         ------
