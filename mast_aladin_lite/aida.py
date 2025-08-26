@@ -1,5 +1,6 @@
 from astropy.coordinates import SkyCoord, Angle
 import astropy.units as u
+import warnings
 
 
 class AID:
@@ -92,9 +93,10 @@ class AID:
         """
 
         if image_label is not None:
-            raise NotImplementedError(
-                "aladin-lite only shows one 'image' per viewer, and does not need"
-                "the concept of labels. `image_label` must be set to `None`."
+            warnings.warn(
+                "aladin-lite only shows one 'image' per viewer, and does not use"
+                "the concept of labels. `image_label` should be set to `None`.",
+                UserWarning
             )
 
         self._set_center(center)
@@ -146,9 +148,10 @@ class AID:
             )
 
         if image_label is not None:
-            raise NotImplementedError(
-                "aladin-lite only shows one 'image' per viewer, and does not need"
-                "the concept of labels. `image_label` must be set to `None`."
+            warnings.warn(
+                "aladin-lite only shows one 'image' per viewer, and does not use"
+                "the concept of labels. `image_label` should be set to `None`.",
+                UserWarning
             )
 
         viewport_state = dict(
