@@ -1,5 +1,6 @@
 from astropy.coordinates import SkyCoord, Angle
 import astropy.units as u
+import warnings
 
 
 class AID:
@@ -17,7 +18,49 @@ class AID:
     def __init__(self, mast_aladin):
         self.app = mast_aladin
 
-    def set_viewport(self, center=None, fov=None, rotation=None):
+    def _set_center(self, center=None):
+        if center is None:
+            return
+
+        if not isinstance(center, SkyCoord):
+            raise TypeError(
+                f"`center` must be a SkyCoord object. Received {center=}"
+            )
+
+        self.app.target = center
+
+    def _set_fov(self, fov=None):
+        if fov is None:
+            return
+
+        if isinstance(fov, (float, int)):
+            fov = fov * u.deg
+
+        elif not isinstance(fov, (u.Quantity, Angle)):
+            raise ValueError(
+                f"`fov` must be an `~astropy.coordinates.Angle` or float. Received {fov=}"
+            )
+
+        # Determine the scale factor by which we want to adjust setting the
+        # ipyaladin horizontal fov
+        scale_factor = fov / min(self.app.fov_xy)
+        self.app.fov = self.app.fov * scale_factor
+
+    def _set_rotation(self, rotation=None):
+        if rotation is None:
+            return
+
+        if not isinstance(rotation, (u.Quantity, Angle, float)):
+            raise TypeError(
+                f"`rotation` must be an `~astropy.coordinates.Angle` or float. Received {rotation=}"
+            )
+
+        if isinstance(rotation, (u.Quantity, Angle)):
+            rotation = rotation.to_value(u.deg)
+
+        self.app.rotation = rotation
+
+    def set_viewport(self, center=None, fov=None, rotation=None, image_label=None, **kwargs):
         """
         Sets the viewport based on provided parameters.
         Presently, centers the viewer on a particular point, `center`,
@@ -35,6 +78,10 @@ class AID:
             degrees east of north (counter-clockwise). It can be set with
             an `~astropy.coordinates.Angle` or floats interpreted
             as angles in units of degrees.
+        image_label : str, optional
+            `image_label` is a required argument for ``AID`` API compatibility,
+            but it is not relevant for HiPS browsers like aladin-lite. If not
+            `None`, an warning will be emitted
 
         Raises
         ------
@@ -42,45 +89,18 @@ class AID:
             - Given coordinates are not provided as SkyCoord.
             - Given fov is not provided as Angle or float.
             - Given rotation is not provided as Angle or float.
-
         """
 
-        if center is not None:
-            if not isinstance(center, SkyCoord):
-                raise TypeError(
-                    "`center` must be a SkyCoord object."
-                )
+        if image_label is not None:
+            warnings.warn(
+                "aladin-lite only shows one 'image' per viewer, and does not use"
+                "the concept of labels. `image_label` should be set to `None`.",
+                UserWarning
+            )
 
-            self.app.target = center
-
-        if fov is not None:
-            if isinstance(fov, (u.Quantity, Angle)):
-                fov = fov.to_value(u.deg)
-
-            elif not isinstance(fov, (float, int)):
-                raise TypeError(
-                    f"`fov` must be an `~astropy.coordinates.Angle` or float, got {fov=}"
-                )
-
-            current_fov = self.app.fov.to_value(u.deg)
-            aspect_ratio = self.app._fov_xy["y"] / self.app._fov_xy["x"]
-
-            # Determine the scale factor by which we want to adjust setting the
-            # ipyaladin horizontal fov
-            if aspect_ratio > 1:
-                scale_factor = fov / current_fov
-            else:
-                scale_factor = fov / self.app._fov_xy["y"]
-
-            self.app.fov = self.app.fov * scale_factor
-
-        if rotation is not None:
-            if not isinstance(rotation, Angle) and not isinstance(rotation, float):
-                raise TypeError(
-                    "`rotation` must be an `~astropy.coordinates.Angle` or float."
-                )
-
-            self.app.rotation = rotation
+        self._set_center(center)
+        self._set_fov(fov)
+        self._set_rotation(rotation)
 
     def get_viewport(
         self, sky_or_pixel="sky", image_label=None
@@ -116,7 +136,6 @@ class AID:
         ------
         NotImplementedError
             - Given `sky_or_pixel` is not "sky" or `None`.
-            - Given `image_label` is not `None`.
 
         """
 
@@ -127,20 +146,15 @@ class AID:
             )
 
         if image_label is not None:
-            raise NotImplementedError(
-                "aladin-lite only shows one 'image' per viewer, and does not need"
-                "the concept of labels. `image_label` must be set to `None`."
+            warnings.warn(
+                "aladin-lite only shows one 'image' per viewer, and does not use"
+                "the concept of labels. `image_label` should be set to `None`.",
+                UserWarning
             )
-
-        aspect_ratio = self.app._fov_xy["y"] / self.app._fov_xy["x"]
-        if aspect_ratio > 1:
-            current_fov = self.app._fov_xy["x"]
-        else:
-            current_fov = self.app._fov_xy["y"]
 
         viewport_state = dict(
             center=self.app.target,
-            fov=current_fov,
+            fov=min(self.app.fov_xy),
             rotation=self.app.rotation,
             image_label=None
         )

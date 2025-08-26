@@ -19,18 +19,18 @@ class ViewerSyncUI():
             style=widgets.ToggleButtonsStyle(button_width="33.1%")
         )
 
-        self.buttons.observe(self._handle_sync)
+        self.buttons.observe(self._handle_sync, names="value")
 
-    def _handle_sync(self, _):
-        match self.buttons.index:
-            case 0:
+    def _handle_sync(self, change):
+        match change["new"]:
+            case "None":
                 self.sync_manager.stop_real_time_sync()
-            case 1:
+            case "Imviz":
                 self.sync_manager.start_real_time_sync(
                     source=self.imviz,
                     destination=self.mast_aladin
                 )
-            case 2:
+            case "Mast Aladin":
                 self.sync_manager.start_real_time_sync(
                     source=self.mast_aladin,
                     destination=self.imviz

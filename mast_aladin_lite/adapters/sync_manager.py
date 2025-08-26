@@ -25,4 +25,4 @@ class SyncManager():
         self.destination = None
 
         if prev_source:
-            self.source.remove_callback(self._callback)
+            prev_source.remove_callback(self._callback)
