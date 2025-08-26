@@ -81,7 +81,7 @@ class AID:
         image_label : str, optional
             `image_label` is a required argument for ``AID`` API compatibility,
             but it is not relevant for HiPS browsers like aladin-lite. If not
-            `None`, an error will be raised.
+            `None`, an warning will be emitted 
 
         Raises
         ------
@@ -89,7 +89,6 @@ class AID:
             - Given coordinates are not provided as SkyCoord.
             - Given fov is not provided as Angle or float.
             - Given rotation is not provided as Angle or float.
-
         """
 
         if image_label is not None:
@@ -129,15 +128,15 @@ class AID:
                 The length of the shorter viewport axis.
             - rotation : `~astropy.coordinates.Angle`
                 Angle of the view center to north pole angle in degrees.
-            - image_label: None
-                A string representing the label of the image, always `None`
-                for aladin-lite.
+            - image_label : str, optional
+                `image_label` is a required argument for ``AID`` API compatibility,
+                but it is not relevant for HiPS browsers like aladin-lite. If not
+                `None`, an warning will be emitted 
 
         Raises
         ------
         NotImplementedError
             - Given `sky_or_pixel` is not "sky" or `None`.
-            - Given `image_label` is not `None`.
 
         """
 
