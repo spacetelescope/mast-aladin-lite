@@ -37,7 +37,7 @@ def test_overlays_dict_add_markers():
 
     updated_options = options.copy()
     updated_options.update(
-        {"name":test_name + "_1", "color":"red", "shape":"random", "source_size":20}
+        {"name": test_name + "_1", "color": "red", "shape": "random", "source_size": 20}
     )
 
     marker_overlay = mast_aladin.update_overlay(
@@ -69,7 +69,7 @@ def test_overlays_dict_add_catalog_from_URL():
 
     updated_options = options.copy()
     updated_options.update(
-        {"name":test_name + "_1", "color":"#66FF00", "source_size":20}
+        {"name": test_name + "_1", "color": "#66FF00", "source_size": 20}
     )
 
     url_overlay = mast_aladin.update_overlay(
@@ -106,7 +106,7 @@ def test_overlays_dict_add_table():
 
     updated_options = options.copy()
     updated_options.update(
-        {"name":test_name + "_1"}
+        {"name": test_name + "_1"}
     )
 
     table_overlay = mast_aladin.update_overlay(
@@ -127,8 +127,8 @@ def test_overlays_dict_add_graphic_overlay_from_region():
     test_name = "test"
 
     circle = CircleSkyRegion(
-        center=SkyCoord.from_name("M31"), 
-        radius=Angle(0.5, "deg"), 
+        center=SkyCoord.from_name("M31"),
+        radius=Angle(0.5, "deg"),
         visual={"edgecolor": "yellow"}
     )
     options = {"name": test_name}
@@ -139,7 +139,7 @@ def test_overlays_dict_add_graphic_overlay_from_region():
 
     updated_options = options.copy()
     updated_options.update(
-        {"name":test_name + "_1", "color": "#66FF00"}
+        {"name": test_name + "_1", "color": "#66FF00"}
     )
 
     region_overlay = mast_aladin.update_overlay(
@@ -174,7 +174,7 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_(
     mast_aladin = MastAladin()
 
     test_name = "test"
-    options = {"name": test_name, "color":"red"}
+    options = {"name": test_name, "color": "red"}
     stcs_overlay = mast_aladin.add_graphic_overlay_from_stcs(stcs_strings, **options)
 
     assert type(stcs_overlay) is MastOverlay
@@ -182,7 +182,7 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_(
 
     updated_options = options.copy()
     updated_options.update(
-        {"name":test_name + "_1", "color": "#66FF00"}
+        {"name": test_name + "_1", "color": "#66FF00"}
     )
 
     stcs_overlay = mast_aladin.update_overlay(

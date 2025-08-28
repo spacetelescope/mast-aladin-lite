@@ -323,22 +323,23 @@ class MastAladin(Aladin, DelayUntilRendered):
 
         if not new_options:
             raise ValueError(
-                f"Cannot update overlayer `{overlay.name}` since no options to update were provided."
+                f"Cannot update overlayer `{overlay.name}` since no options to "
+                "update were provided."
             )
 
         self.remove_overlay(overlay)
         overlay_type = overlay.type
         overlay.options.update(new_options)
 
-        if overlay_type ==  "marker":
+        if overlay_type == "marker":
             update_info = overlay["update_info"]
             overlay_info = self.add_markers(update_info, **overlay.options)
         elif overlay_type == "catalog":
-            overlay_info = self.add_catalog_from_URL(overlay["votable_URL"],overlay.options)
+            overlay_info = self.add_catalog_from_URL(overlay["votable_URL"], overlay.options)
         elif overlay_type == "table":
             overlay_info = self.add_table(
                 overlay["table"],
-                shape=overlay.options.get("shape","cross"),
+                shape=overlay.options.get("shape", "cross"),
                 **overlay.options
             )
         elif overlay_type == "overlay_region":
@@ -357,6 +358,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             overlay_info = self.add_graphic_overlay_from_stcs(update_info, **overlay.options)
 
         return overlay_info
+
 
 def gca():
     """
