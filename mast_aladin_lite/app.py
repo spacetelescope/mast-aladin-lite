@@ -90,6 +90,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             {
                 "type": "marker",
                 "markers": [marker.__dict__ for marker in markers],
+                "update_info": markers,
                 "options": catalog_options,
             }
         )
@@ -226,6 +227,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             {
                 "type": "overlay_region",
                 "regions_infos": regions_infos,
+                "update_info": region_list,
                 "options": graphic_options,
             }
         )
@@ -260,6 +262,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             {
                 "type": "overlay_stcs",
                 "regions_infos": regions_infos,
+                "update_info": region_list,
                 "options": overlay_options,
             }
         )
@@ -309,6 +312,51 @@ class MastAladin(Aladin, DelayUntilRendered):
 
             self._overlays_dict.pop(name)
 
+    def update_overlay(self, overlay, **new_options):
+
+        if isinstance(overlay, str):
+            overlay = self._overlays_dict[overlay]
+        elif not isinstance(overlay, MastOverlay):
+            raise TypeError(
+                "overlay must be a str, MastOverlay, or iterable of these."
+            )
+
+        if not new_options:
+            raise ValueError(
+                f"Cannot update overlayer `{overlay.name}` since no options to update were provided."
+            )
+
+        self.remove_overlay(overlay)
+        overlay_type = overlay.type
+        overlay.options.update(new_options)
+
+        if overlay_type ==  "marker":
+            update_info = overlay["update_info"]
+            overlay_info = self.add_markers(update_info, **overlay.options)
+        elif overlay_type == "catalog":
+            overlay_info = self.add_catalog_from_URL(overlay["votable_URL"],overlay.options)
+        elif overlay_type == "table":
+            overlay_info = self.add_table(
+                overlay["table"],
+                shape=overlay.options.get("shape","cross"),
+                **overlay.options
+            )
+        elif overlay_type == "overlay_region":
+            update_info = overlay["update_info"]
+            new_regions = []
+            for region in update_info:
+                style = overlay.options.copy()
+                if "color" in style:
+                    style["edgecolor"] = style["color"]
+                style.pop("name", None)
+                region.visual.update(style)
+                new_regions.append(region)
+            overlay_info = self.add_graphic_overlay_from_region(update_info, **overlay.options)
+        elif overlay_type == "overlay_stcs":
+            update_info = overlay["update_info"]
+            overlay_info = self.add_graphic_overlay_from_stcs(update_info, **overlay.options)
+
+        return overlay_info
 
 def gca():
     """
