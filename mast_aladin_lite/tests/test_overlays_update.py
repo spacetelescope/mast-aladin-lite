@@ -1,6 +1,5 @@
 from astropy.table import Table
 from astropy.coordinates import SkyCoord, Angle
-import pytest
 
 from mast_aladin_lite import MastAladin
 from mast_aladin_lite.overlay.mast_overlay import MastOverlay
@@ -154,25 +153,11 @@ def test_overlays_dict_add_graphic_overlay_from_region():
     assert region_overlay.options == updated_options
 
 
-test_stcs_iterables = [
-    "CIRCLE ICRS 258.93205686 43.13632863 0.625",
-]
-
-
-@pytest.mark.parametrize("stcs_strings", test_stcs_iterables)
-def test_overlays_dict_add_graphic_overlay_from_stcs_(
-    stcs_strings,
-):
-    """Test overlays_dict overlay info from adding iterable STC-S string(s).
-
-    Parameters
-    ----------
-    stcs_strings : Union[Iterable[str], str]
-        The stcs strings to create region overlay info from.
-
-    """
+def test_overlays_dict_add_graphic_overlay_from_stcs_():
+    """Test overlays_dict overlay info from adding iterable STC-S string(s)."""
     mast_aladin = MastAladin()
 
+    stcs_strings = "CIRCLE ICRS 258.93205686 43.13632863 0.625"
     test_name = "test"
     options = {"name": test_name, "color": "red"}
     stcs_overlay = mast_aladin.add_graphic_overlay_from_stcs(stcs_strings, **options)

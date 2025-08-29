@@ -332,8 +332,8 @@ class MastAladin(Aladin, DelayUntilRendered):
         overlay.options.update(new_options)
 
         if overlay_type == "marker":
-            update_info = overlay["update_info"]
-            overlay_info = self.add_markers(update_info, **overlay.options)
+            markers = overlay["update_info"]
+            overlay_info = self.add_markers(markers, **overlay.options)
         elif overlay_type == "catalog":
             overlay_info = self.add_catalog_from_URL(overlay["votable_URL"], overlay.options)
         elif overlay_type == "table":
@@ -343,19 +343,17 @@ class MastAladin(Aladin, DelayUntilRendered):
                 **overlay.options
             )
         elif overlay_type == "overlay_region":
-            update_info = overlay["update_info"]
-            new_regions = []
-            for region in update_info:
+            regions = overlay["update_info"]
+            for region in regions:
                 style = overlay.options.copy()
                 if "color" in style:
                     style["edgecolor"] = style["color"]
                 style.pop("name", None)
                 region.visual.update(style)
-                new_regions.append(region)
-            overlay_info = self.add_graphic_overlay_from_region(update_info, **overlay.options)
+            overlay_info = self.add_graphic_overlay_from_region(regions, **overlay.options)
         elif overlay_type == "overlay_stcs":
-            update_info = overlay["update_info"]
-            overlay_info = self.add_graphic_overlay_from_stcs(update_info, **overlay.options)
+            stcs_strings = overlay["update_info"]
+            overlay_info = self.add_graphic_overlay_from_stcs(stcs_strings, **overlay.options)
 
         return overlay_info
 
