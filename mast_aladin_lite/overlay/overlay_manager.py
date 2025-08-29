@@ -3,7 +3,8 @@ from mast_aladin_lite.overlay.mast_overlay import MastOverlay
 
 
 class OverlayManager:
-    def __init__(self):
+    def __init__(self, mast_aladin):
+        self.app = mast_aladin
         self._overlays_dict = {}
 
     def __setitem__(self, key, value):
@@ -90,7 +91,7 @@ class OverlayManager:
             The overlay options for the layer being added to the widget.
         """
 
-        overlay_info = MastOverlay(overlay_info)
+        overlay_info = MastOverlay(overlay_info, self.app)
 
         self[overlay_info["options"]["name"]] = overlay_info
 

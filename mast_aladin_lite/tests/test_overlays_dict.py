@@ -328,19 +328,25 @@ def test_invalid_overlay_type(
             f"Must be one of {[t.value for t in MastOverlayType]}."
         )
     ):
-        MastOverlay(test_invalid_overlay)
+        MastOverlay(test_invalid_overlay, mast_aladin)
 
 
-test_marker_overlay = MastOverlay({
-    "type": "marker",
-    "options": {"name": "test_markers"}
-})
+test_marker_overlay = MastOverlay(
+    {
+        "type": "marker",
+        "options": {"name": "test_markers"}
+    },
+    mast_aladin,
+)
 
 
-test_catalog_overlay = MastOverlay({
-    "type": "catalog",
-    "options": {"name": "test_catalog"}
-})
+test_catalog_overlay = MastOverlay(
+    {
+        "type": "catalog",
+        "options": {"name": "test_catalog"}
+    },
+    mast_aladin,
+)
 
 
 test_overlays = [
