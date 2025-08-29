@@ -39,10 +39,7 @@ def test_overlays_dict_add_markers():
         {"name": test_name + "_1", "color": "red", "shape": "random", "source_size": 20}
     )
 
-    marker_overlay = mast_aladin.update_overlay(
-        marker_overlay,
-        **updated_options,
-    )
+    marker_overlay = marker_overlay.update(**updated_options)
 
     assert test_name not in mast_aladin._overlays_dict
     assert test_name + "_1" in mast_aladin._overlays_dict
@@ -71,10 +68,7 @@ def test_overlays_dict_add_catalog_from_URL():
         {"name": test_name + "_1", "color": "#66FF00", "source_size": 20}
     )
 
-    url_overlay = mast_aladin.update_overlay(
-        url_overlay,
-        **updated_options,
-    )
+    url_overlay = url_overlay.update(**updated_options)
 
     assert test_name not in mast_aladin._overlays_dict
     assert test_name + "_1" in mast_aladin._overlays_dict
@@ -108,10 +102,7 @@ def test_overlays_dict_add_table():
         {"name": test_name + "_1"}
     )
 
-    table_overlay = mast_aladin.update_overlay(
-        table_overlay,
-        **updated_options,
-    )
+    table_overlay = table_overlay.update(**updated_options)
 
     assert test_name not in mast_aladin._overlays_dict
     assert test_name + "_1" in mast_aladin._overlays_dict
@@ -141,10 +132,7 @@ def test_overlays_dict_add_graphic_overlay_from_region():
         {"name": test_name + "_1", "color": "#66FF00"}
     )
 
-    region_overlay = mast_aladin.update_overlay(
-        region_overlay,
-        **updated_options,
-    )
+    region_overlay = region_overlay.update(**updated_options)
 
     assert test_name not in mast_aladin._overlays_dict
     assert test_name + "_1" in mast_aladin._overlays_dict
@@ -170,10 +158,7 @@ def test_overlays_dict_add_graphic_overlay_from_stcs_():
         {"name": test_name + "_1", "color": "#66FF00"}
     )
 
-    stcs_overlay = mast_aladin.update_overlay(
-        stcs_overlay,
-        **updated_options,
-    )
+    stcs_overlay = stcs_overlay.update(**updated_options)
 
     assert test_name not in mast_aladin._overlays_dict
     assert test_name + "_1" in mast_aladin._overlays_dict

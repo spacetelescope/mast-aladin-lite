@@ -45,7 +45,7 @@ class MastAladin(Aladin, DelayUntilRendered):
         global _latest_instantiated_app
         _latest_instantiated_app = self
 
-        self._overlays_dict = OverlayManager()
+        self._overlays_dict = OverlayManager(self)
 
     def load_table(
         self,
@@ -311,51 +311,6 @@ class MastAladin(Aladin, DelayUntilRendered):
                 )
 
             self._overlays_dict.pop(name)
-
-    def update_overlay(self, overlay, **new_options):
-
-        if isinstance(overlay, str):
-            overlay = self._overlays_dict[overlay]
-        elif not isinstance(overlay, MastOverlay):
-            raise TypeError(
-                "overlay must be a str, MastOverlay, or iterable of these."
-            )
-
-        if not new_options:
-            raise ValueError(
-                f"Cannot update overlayer `{overlay.name}` since no options to "
-                "update were provided."
-            )
-
-        self.remove_overlay(overlay)
-        overlay_type = overlay.type
-        overlay.options.update(new_options)
-
-        if overlay_type == "marker":
-            markers = overlay["update_info"]
-            overlay_info = self.add_markers(markers, **overlay.options)
-        elif overlay_type == "catalog":
-            overlay_info = self.add_catalog_from_URL(overlay["votable_URL"], overlay.options)
-        elif overlay_type == "table":
-            overlay_info = self.add_table(
-                overlay["table"],
-                shape=overlay.options.get("shape", "cross"),
-                **overlay.options
-            )
-        elif overlay_type == "overlay_region":
-            regions = overlay["update_info"]
-            for region in regions:
-                style = overlay.options.copy()
-                if "color" in style:
-                    style["edgecolor"] = style["color"]
-                style.pop("name", None)
-                region.visual.update(style)
-            overlay_info = self.add_graphic_overlay_from_region(regions, **overlay.options)
-        elif overlay_type == "overlay_stcs":
-            stcs_strings = overlay["update_info"]
-            overlay_info = self.add_graphic_overlay_from_stcs(stcs_strings, **overlay.options)
-
-        return overlay_info
 
 
 def gca():
