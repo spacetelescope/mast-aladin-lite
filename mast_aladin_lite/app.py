@@ -45,7 +45,7 @@ class MastAladin(Aladin, DelayUntilRendered):
         global _latest_instantiated_app
         _latest_instantiated_app = self
 
-        self._overlays_dict = OverlayManager()
+        self._overlays_dict = OverlayManager(self)
 
     def load_table(
         self,
@@ -90,6 +90,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             {
                 "type": "marker",
                 "markers": [marker.__dict__ for marker in markers],
+                "update_info": markers,
                 "options": catalog_options,
             }
         )
@@ -226,6 +227,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             {
                 "type": "overlay_region",
                 "regions_infos": regions_infos,
+                "update_info": region_list,
                 "options": graphic_options,
             }
         )
@@ -260,6 +262,7 @@ class MastAladin(Aladin, DelayUntilRendered):
             {
                 "type": "overlay_stcs",
                 "regions_infos": regions_infos,
+                "update_info": region_list,
                 "options": overlay_options,
             }
         )
