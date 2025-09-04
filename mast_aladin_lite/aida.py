@@ -63,8 +63,6 @@ class AID:
     def set_viewport(self, center=None, fov=None, rotation=None, image_label=None, **kwargs):
         """
         Sets the viewport based on provided parameters.
-        Presently, centers the viewer on a particular point, `center`,
-        given as `~astropy.coordinates.SkyCoord` objects.
 
         Parameters
         ----------
@@ -81,19 +79,21 @@ class AID:
         image_label : str, optional
             `image_label` is a required argument for ``AID`` API compatibility,
             but it is not relevant for HiPS browsers like aladin-lite. If not
-            `None`, an warning will be emitted
+            `None`, a warning will be emitted.
 
         Raises
         ------
         TypeError
-            - Given coordinates are not provided as SkyCoord.
+            - Given center is not provided as SkyCoord.
             - Given fov is not provided as Angle or float.
             - Given rotation is not provided as Angle or float.
+        Warning
+            - Image label was passed.
         """
 
         if image_label is not None:
             warnings.warn(
-                "aladin-lite only shows one 'image' per viewer, and does not use"
+                "aladin-lite only shows one 'image' per viewer, and does not use "
                 "the concept of labels. `image_label` should be set to `None`.",
                 UserWarning
             )
@@ -123,9 +123,9 @@ class AID:
         dict
             A dictionary containing:
             - center : `~astropy.coordinates.SkyCoord`
-                Center the viewer on this coordinate.
+                Center coordinates of the viewer.
             - fov : `~astropy.coordinates.Angle`
-                The length of the shorter viewport axis.
+                Length of the shorter viewport axis.
             - rotation : `~astropy.coordinates.Angle`
                 Angle of the view center to north pole angle in degrees.
             - image_label: None
@@ -136,6 +136,8 @@ class AID:
         ------
         NotImplementedError
             - Given `sky_or_pixel` is not "sky" or `None`.
+        Warning
+            - Image label was passed.
 
         """
 
@@ -147,7 +149,7 @@ class AID:
 
         if image_label is not None:
             warnings.warn(
-                "aladin-lite only shows one 'image' per viewer, and does not use"
+                "aladin-lite only shows one 'image' per viewer, and does not use "
                 "the concept of labels. `image_label` should be set to `None`.",
                 UserWarning
             )
