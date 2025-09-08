@@ -4,6 +4,7 @@ from mast_aladin_lite.app import MastAladin
 from mast_aladin_lite.tests.test_utils import BaseImviz
 
 from pytest import approx
+import warnings
 
 
 class TestSyncAdapters(BaseImviz):
@@ -23,7 +24,9 @@ class TestSyncAdapters(BaseImviz):
         assert center.dec.deg == approx(-33.71625419, rel=1e-8)
 
         # act - sync the mast aladin viewer to the imviz view
-        mast_aladin_sync_adapter.sync_to(imviz_sync_adapter)
+        with warnings.catch_warnings(record=True) as w:
+            mast_aladin_sync_adapter.sync_to(imviz_sync_adapter)
+            assert len(w) == 1
 
         # assert that the view has changed as expected
         center = mast_aladin_sync_adapter.viewer.target

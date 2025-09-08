@@ -23,7 +23,7 @@ class BaseImviz:
             'CRVAL2': -33.71313687167955,
             'NAXIS2': 0
         })
-        imviz_helper.load_data(hdu1, data_label='has_wcs_1')
+        imviz_helper.load(hdu1, data_label='has_wcs_1')
 
         self.imviz = imviz_helper
 
