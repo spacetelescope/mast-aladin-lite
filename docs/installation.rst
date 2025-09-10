@@ -3,14 +3,14 @@ User Installation
 
 .. note::
 
-    The `mast-aladin-lite` package is actively maintained, and improvements are made regularly.
+    The `mast-aladin` package is actively maintained, and improvements are made regularly.
     To ensure you have the latest features and bug fixes, we recommend updating to the most 
     recent version. The development version often includes the latest changes ahead of full releases.
 
 
 Set Up Your Local Environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-To use mast-aladin-lite, you need `Python 3.11` or later. Below is an example using `Python 3.11`, but you can 
+To use mast-aladin, you need `Python 3.11` or later. Below is an example using `Python 3.11`, but you can 
 replace 3.11 with any supported version (e.g., 3.12).
 
 1. **Create a new Conda environment:**
@@ -20,28 +20,28 @@ replace 3.11 with any supported version (e.g., 3.12).
     conda create -n mast-aladin-env python=3.11
     conda activate mast-aladin-env
 
-2. **Install mast-aladin-lite using pip:**
+2. **Install mast-aladin using pip:**
 
 - To install the latest development version (includes the most recent updates and fixes):
 
 .. code-block:: bash
 
-    pip install git+https://github.com/spacetelescope/mast-aladin-lite --upgrade
+    pip install git+https://github.com/spacetelescope/mast-aladin --upgrade
 
 - To install the latest stable release
 
 .. code-block:: bash
 
-    pip install mast-aladin-lite --upgrade
+    pip install mast-aladin --upgrade
 
 Setting Up a Local Development Copy
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you plan to contribute to mast-aladin-lite or modify the code, 
+If you plan to contribute to mast-aladin or modify the code, 
 follow these steps to set up a local development copy:
 
-1. **Fork the mast-aladin-lite repository**
+1. **Fork the mast-aladin repository**
 
-- Go to the `mast-aladin-lite GitHub repository <https://github.com/spacetelescope/mast-aladin-lite>`_
+- Go to the `mast-aladin GitHub repository <https://github.com/spacetelescope/mast-aladin>`_
 - Click the Fork button.
 - This creates a copy of the repository under your GitHub account.
   
@@ -51,14 +51,14 @@ follow these steps to set up a local development copy:
 
 .. code-block:: bash
 
-    git clone git@github.com:username/mast-aladin-lite.git
-    cd mast-aladin-lite
+    git clone git@github.com:username/mast-aladin.git
+    cd mast-aladin
 
 3. **Set up the upstream remote**
 
 .. code-block:: bash
 
-    git remote add upstream git@github.com:spacetelescope/mast-aladin-lite.git
+    git remote add upstream git@github.com:spacetelescope/mast-aladin.git
     git fetch upstream main
     git fetch upstream --tags
 

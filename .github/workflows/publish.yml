@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
-    if: github.repository == 'spacetelescope/mast-aladin-lite'
+    if: github.repository == 'spacetelescope/mast-aladin'
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
@@ -43,8 +43,8 @@ jobs:
       run: |
         cd ..
         python -m venv testenv
-        testenv/bin/pip install pytest pytest-astropy pytest-tornasync mast-aladin-lite/dist/*.whl
-        testenv/bin/pytest -p no:warnings mast-aladin-lite/mast_aladin_lite/tests
+        testenv/bin/pip install pytest pytest-astropy pytest-tornasync mast-aladin/dist/*.whl
+        testenv/bin/pytest -p no:warnings mast-aladin/mast_aladin/tests
 
     # NOTE: Do not run this part for PR testing.
     - name: Publish distribution 📦 to PyPI

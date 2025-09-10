@@ -1,7 +1,7 @@
 import os
 import pytest
 from astropy.table import Table
-from mast_aladin_lite import MastAladin
+from mast_aladin import MastAladin
 from jdaviz import Imviz
 
 

@@ -1,7 +1,7 @@
 from astropy.coordinates import SkyCoord
-from mast_aladin_lite.adapters import AladinSyncAdapter, ImvizSyncAdapter
-from mast_aladin_lite.app import MastAladin
-from mast_aladin_lite.tests.test_utils import BaseImviz
+from mast_aladin.adapters import AladinSyncAdapter, ImvizSyncAdapter
+from mast_aladin.app import MastAladin
+from mast_aladin.tests.test_utils import BaseImviz
 
 from pytest import approx
 import warnings

@@ -12,7 +12,7 @@ import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astropy.table import Table
 
-from mast_aladin_lite.table import validate
+from mast_aladin.table import validate
 from astroquery.mast import MastMissions
 
 __all__ = [
@@ -81,11 +81,11 @@ class MastTable(VuetifyTemplate):
         table : `~astropy.table.Table`
             A table to load.
 
-        app : `~mast_aladin_lite.app.MastAladin`
+        app : `~mast_aladin.app.MastAladin`
             An instance of the ``MastAladin`` app.
 
         update_viewport : bool (optional, default is `True`)
-            If `True`, set the `~mast_aladin_lite.app.MastAladin`
+            If `True`, set the `~mast_aladin.app.MastAladin`
             viewport center to the position of the item in the
             first row of the table on load.
 
@@ -228,7 +228,7 @@ class MastTable(VuetifyTemplate):
         return viz
 
     def vue_open_selected_rows_in_aladin(self, *args):
-        from mast_aladin_lite.app import gca
+        from mast_aladin.app import gca
 
         mal = gca()
 

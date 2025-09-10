@@ -63,8 +63,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project
-project = "mast-aladin-lite"
-author = "mast-aladin-lite developers"
+project = "mast-aladin"
+author = "mast-aladin developers"
 year = datetime.datetime.now().year
 copyright = f'{year}, {author}'
 
@@ -146,12 +146,12 @@ pygments_style = 'sphinx'
 # variables set in the global configuration. The variables set in the
 # global configuration are listed below, commented out.
 
-# html_css_files = ["mast-aladin-lite.css"]
+# html_css_files = ["mast-aladin.css"]
 html_copy_source = False
 
 html_theme_options.update(  # noqa: F405
     {
-        "github_url": "https://github.com/spacetelescope/mast-aladin-lite",
+        "github_url": "https://github.com/spacetelescope/mast-aladin",
         "use_edit_page_button": True,
     }
 )
@@ -160,7 +160,7 @@ html_context = {
     "default_mode": "light",
     "to_be_indexed": ["stable", "latest"],
     "github_user": "spacetelescope",
-    "github_repo": "mast-aladin-lite",
+    "github_repo": "mast-aladin",
     "github_version": "main",
     "doc_path": "docs",
 }
@@ -178,12 +178,12 @@ html_context = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-# html_logo = 'logos/<mast-aladin-lite.svg'
+# html_logo = 'logos/<mast-aladin.svg'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-# html_favicon = 'logos/<mast-aladin-lite>.ico'
+# html_favicon = 'logos/<mast-aladin>.ico'
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied

@@ -1,5 +1,5 @@
 import warnings
-from mast_aladin_lite.overlay.mast_overlay import MastOverlay
+from mast_aladin.overlay.mast_overlay import MastOverlay
 
 
 class OverlayManager:
