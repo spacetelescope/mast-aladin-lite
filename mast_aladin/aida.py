@@ -5,7 +5,7 @@ import warnings
 
 class AID:
     """
-    Provides API for mast-aladin-lite to allow for parity with
+    Provides API for mast-aladin to allow for parity with
     jdaviz. This is to be used as a mixin within exisiting classes.
     This is based on the Astro Image Display API (AIDA)[1]_.
 

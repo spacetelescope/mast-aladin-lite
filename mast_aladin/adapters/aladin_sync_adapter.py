@@ -1,5 +1,5 @@
 from IPython.display import display
-from mast_aladin_lite.app import gca
+from mast_aladin.app import gca
 
 from .viewer_sync_adapter import ViewerSyncAdapter
 

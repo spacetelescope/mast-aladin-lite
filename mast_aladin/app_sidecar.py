@@ -3,8 +3,8 @@ import warnings
 from ipyaladin import Aladin
 from sidecar import Sidecar as UpstreamSidecar
 
-from mast_aladin_lite.app import MastAladin, gca
-from mast_aladin_lite.table import MastTable
+from mast_aladin.app import MastAladin, gca
+from mast_aladin.table import MastTable
 
 try:
     from jdaviz.core.helpers import ConfigHelper
@@ -40,7 +40,7 @@ class AppSidecar:
         *apps,
         anchor='split-bottom',
         use_current_apps=False,
-        title='mast-aladin-lite & jdaviz',
+        title='mast-aladin & jdaviz',
         include_aladin=False,
         include_jdaviz=False,
         close_existing=True,
@@ -64,15 +64,15 @@ class AppSidecar:
 
         use_current_apps : bool, optional (default is `False`)
             If `True`, get the last constructed Imviz and
-            mast-aladin-lite instances to open in the sidecar
+            mast-aladin instances to open in the sidecar
 
-        title : str, optional (default is 'mast-aladin-lite & jdaviz')
+        title : str, optional (default is 'mast-aladin & jdaviz')
             Title to appear in the tab label for the sidecar in
             jupyterlab.
 
         include_aladin : bool, optional (default is `False`)
             The sidecar must include at least one
-            mast-aladin-lite instance. If none are already
+            mast-aladin instance. If none are already
             available, a new one will be created.
 
         include_jdaviz : bool, optional (default is `False`)

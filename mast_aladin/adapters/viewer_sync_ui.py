@@ -1,7 +1,7 @@
 import ipywidgets as widgets
 from IPython.display import display
 
-from mast_aladin_lite.adapters import ImvizSyncAdapter, AladinSyncAdapter, SyncManager
+from mast_aladin.adapters import ImvizSyncAdapter, AladinSyncAdapter, SyncManager
 
 
 class ViewerSyncUI():

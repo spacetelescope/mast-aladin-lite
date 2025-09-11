@@ -1,5 +1,5 @@
-Welcome to mast-aladin-lite's documentation!
-============================================
+Welcome to mast-aladin's documentation!
+=======================================
 
 .. toctree::
    :maxdepth: 2

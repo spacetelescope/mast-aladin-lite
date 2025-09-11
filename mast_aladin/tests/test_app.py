@@ -1,4 +1,4 @@
-from mast_aladin_lite.app import MastAladin, gca
+from mast_aladin.app import MastAladin, gca
 
 
 def test_current_app(MastAladin_app):
